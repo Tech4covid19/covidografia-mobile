@@ -1,0 +1,247 @@
+<ion-header mode="md" [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon color="orange" name="share"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-no-padding ion-no-margin">
+      <ion-col class="ion-no-padding ion-text-start" size="6">
+        <ion-button
+          size="large"
+          color="light"
+          expand="full"
+          style="font-size: 0.9em"
+        >
+          <ion-icon
+            slot="start"
+            color="success"
+            name="radio-button-on"
+          ></ion-icon>
+          <ion-text color="medium">
+            {{'SEM SINTOMAS' | translate | titlecase }}
+          </ion-text>
+        </ion-button>
+      </ion-col>
+      <ion-col class="ion-no-padding" size="6">
+        <ion-button
+          size="large"
+          color="light"
+          expand="full"
+          style="font-size: 0.9em"
+        >
+          <ion-icon
+            slot="start"
+            color="success"
+            name="radio-button-on"
+          ></ion-icon>
+          <ion-text color="medium">
+            {{'AFASTAMENTO SOCIAL' | translate | titlecase }}
+          </ion-text>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-button color="orange" shape="round" expand="full">
+          <ion-text style="color: white">
+            {{'ATUALIZAR O MEU ESTADO' | translate | titlecase }}
+          </ion-text>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-align-items-center">
+      <ion-col size="9">
+        <ion-text color="dark">
+          <strong
+            >{{'ESTADO NA MINHA ÁREA' | translate | titlecase }}</strong
+          > </ion-text
+        ><br />
+        <ion-text style="font-size: 0.8em" color="medium">
+          {{('BASEADO NA INFORMAÇÃO DE ' | translate | titlecase) +
+          numUtilizadores + (' UTILIZADORES' | translate | titlecase) }}
+        </ion-text>
+      </ion-col>
+      <ion-col size="3">
+        <ion-button expand="full" fill="clear">
+          <ion-icon slot="start" name="pin"></ion-icon>
+          {{postalCode}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-row class="symptomsCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'COM SINTOMAS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/user-orange.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-row class="noSymptomsCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'SEM SINTOMAS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/heart.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="6">
+        <ion-row class="suspiciousCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'SUSPEITOS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/user-red.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-row class="recoveredCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'RECUPERADOS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/green.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="6">
+        <ion-row class="infectedCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'INFETADOS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/disease.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-start">
+        <ion-text color="dark">
+          <strong>
+            {{'ISOLAMENTO' | translate | titlecase}}
+          </strong>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-row class="emCasaCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'EM CASA PREVENTIVAMENTE' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/heart.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-row class="rotinaCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'SEM SINTOMAS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/heart.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="6">
+        <ion-row class="isoladosCard">
+          <ion-col class="ion-padding" size="6">
+            <ion-text style="font-size: 2em">{{numSymptoms}}</ion-text>
+            <br />
+            <ion-text style="font-size: 0.9rem; font-weight: bold"
+              >{{'SUSPEITOS' | translate | titlecase}}</ion-text
+            >
+          </ion-col>
+          <ion-col class="ion-padding ion-text-end" size="6">
+            <img src="assets/img/illustrations/dashboard/user-red.svg" />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid style="font-size: 0.8em">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="medium">
+          <ion-icon size="small" name="mail"></ion-icon> &nbsp;
+          info@covidografia.pt
+        </ion-text>
+      </ion-col>
+      <ion-col class="ion-text-center" size="12">
+        <ion-text color="medium">
+          {{'TERMOS E CONDIÇÕES' | translate | titlecase}} | {{'POLÍTICA DE
+          PRIVACIDADE' | translate | titlecase}}
+        </ion-text>
+      </ion-col>
+      <ion-col class="ion-text-center" size="12">
+        <ion-text color="medium">
+          {{'ELIMINAR CONTA' | translate | titlecase}}
+        </ion-text>
+      </ion-col>
+      <ion-col class="ion-padding ion-text-center" size="12">
+        <ion-text color="orange">
+          {{'Log Out' | translate | titlecase}}
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
