@@ -1,0 +1,59 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="12" class="ion-text-start">
+      <ion-text color="dark">
+        <strong>
+          {{ 'ISOLAMENTO' | translate | titlecase }}
+        </strong>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-row class="emCasaCard">
+        <ion-col class="ion-padding" size="6">
+          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <br />
+          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+            'EM CASA PREVENTIVAMENTE' | translate | titlecase
+          }}</ion-text>
+        </ion-col>
+        <ion-col class="ion-padding ion-text-end" size="6">
+          <img src="assets/img/illustrations/dashboard/heart.svg" />
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <ion-row class="rotinaCard">
+        <ion-col class="ion-padding" size="6">
+          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <br />
+          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+            'SEM SINTOMAS' | translate | titlecase
+          }}</ion-text>
+        </ion-col>
+        <ion-col class="ion-padding ion-text-end" size="6">
+          <img src="assets/img/illustrations/dashboard/heart.svg" />
+        </ion-col>
+      </ion-row>
+    </ion-col>
+    <ion-col size="6">
+      <ion-row class="isoladosCard">
+        <ion-col class="ion-padding" size="6">
+          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <br />
+          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+            'SUSPEITOS' | translate | titlecase
+          }}</ion-text>
+        </ion-col>
+        <ion-col class="ion-padding ion-text-end" size="6">
+          <img src="assets/img/illustrations/dashboard/user-red.svg" />
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
