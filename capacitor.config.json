@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "covidografia",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}
