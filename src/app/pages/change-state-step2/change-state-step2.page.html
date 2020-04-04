@@ -1,26 +1,61 @@
-<ion-header>
+<ion-header class="ion-no-border" [translucent]="true">
   <ion-toolbar>
-    <ion-title>changeStateStep2</ion-title>
+    <ion-title>statusUpdate</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/change-state-step1'"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let condition of conditions | async">
-      {{condition.status}}
-    </ion-item>
-  </ion-list>
+  <app-steps [steps]="steps"></app-steps>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="medium">
+          {{'PASSO 1 ESTADO DE SAÚDE'}}
+        </ion-text>
+      </ion-col>
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="dark">
+          <strong>
+            {{'Apresenta algum dos sintomas abaixo?'}}
+          </strong>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" lgSize="6">
+        <ion-list lines="none">
+          <ion-item
+            class="ion-margin"
+            (click)="check(condition)"
+            *ngFor="let condition of conditions"
+          >
+            <ion-label>{{condition.status}}</ion-label>
+            <ion-checkbox
+              slot="start"
+              [(ngModel)]="condition.isChecked"
+            ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
-<ion-footer>
+<ion-footer *ngIf="conditions && conditions.length > 0">
   <ion-button
-    routerDirection="forward"
-    [routerLink]="'/change-state-step3'"
+    [disabled]="canGoFurther()"
+    (click)="goTo('/change-state-step3')"
     color="orange"
     expand="full"
     class="ion-no-padding ion-no-margin"
   >
     <ion-text style="color: white;">
-      {{'PASSO 3' | translate | titlecase }}
+      {{'IR PARA PASSO 3' | translate | titlecase }}
     </ion-text>
   </ion-button>
 </ion-footer>

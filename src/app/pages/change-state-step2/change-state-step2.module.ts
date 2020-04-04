@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { ChangeStateStep2PageRoutingModule } from './change-state-step2-routing.module';
 
 import { ChangeStateStep2Page } from './change-state-step2.page';
+import { StepsModule } from 'src/app/components/steps/steps.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { ChangeStateStep2Page } from './change-state-step2.page';
     FormsModule,
     IonicModule,
     TranslateModule,
+    StepsModule,
     ChangeStateStep2PageRoutingModule
   ],
   declarations: [ChangeStateStep2Page]

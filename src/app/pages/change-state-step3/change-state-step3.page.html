@@ -1,26 +1,62 @@
-<ion-header>
+<ion-header class="ion-no-border" [translucent]="true">
   <ion-toolbar>
-    <ion-title>changeStateStep3</ion-title>
+    <ion-title>statusUpdate</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/change-state-step2'"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let confinementState of confinementStates | async">
-      {{confinementState.state}}
-    </ion-item>
-  </ion-list>
+  <app-steps [steps]="steps"></app-steps>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="medium">
+          {{'Passo 3 - Isolamento'}}
+        </ion-text>
+      </ion-col>
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="dark">
+          <strong>
+            {{'Qual o seu estado de atividade atual?'}}
+          </strong>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" lgSize="6">
+        <ion-list lines="none">
+          <ion-item
+            class="ion-margin"
+            (click)="check(confinementState)"
+            *ngFor="let confinementState of confinementStates"
+          >
+            <ion-label>{{confinementState.state}}</ion-label>
+            <ion-checkbox
+              slot="start"
+              [(ngModel)]="confinementState.isChecked"
+            ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
-<ion-footer>
+<ion-footer *ngIf="confinementStates && confinementStates.length > 0">
   <ion-button
-    routerDirection="root"
-    [routerLink]="'/home'"
+    [disabled]="canGoFurther()"
+    (click)="goTo('/home')"
     color="orange"
     expand="full"
     class="ion-no-padding ion-no-margin"
   >
     <ion-text style="color: white;">
-      {{'Concluir' | translate | titlecase }}
+      {{'SUBMETER' | translate | titlecase }}
     </ion-text>
+    
   </ion-button>
 </ion-footer>

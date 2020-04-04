@@ -1,3 +1,4 @@
+import { StepsModule } from './../../components/steps/steps.module';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +13,7 @@ import { ChangeStateStep1Page } from './change-state-step1.page';
     FormsModule,
     IonicModule,
     TranslateModule,
+    StepsModule,
     ChangeStateStep1PageRoutingModule,
   ],
   declarations: [ChangeStateStep1Page],

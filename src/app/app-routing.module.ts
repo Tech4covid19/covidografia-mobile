@@ -31,6 +31,10 @@ const routes: Routes = [
   {
     path: 'change-state-step3',
     loadChildren: () => import('./pages/change-state-step3/change-state-step3.module').then( m => m.ChangeStateStep3PageModule)
+  },
+  {
+    path: 'video',
+    loadChildren: () => import('./pages/video/video.module').then( m => m.VideoPageModule)
   }
 ];
 
