@@ -13,9 +13,11 @@
     <ion-col size="12">
       <ion-row class="emCasaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Em casa, preventivamente')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'EM CASA PREVENTIVAMENTE' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -29,9 +31,11 @@
     <ion-col size="6">
       <ion-row class="rotinaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Rotina habitual')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SEM SINTOMAS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -43,9 +47,11 @@
     <ion-col size="6">
       <ion-row class="isoladosCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Isolados')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SUSPEITOS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -56,4 +62,3 @@
     </ion-col>
   </ion-row>
 </ion-grid>
-

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>changeStateStep1</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let symptom of symptoms | async">
+      {{symptom.symptom}}
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-button
+    routerDirection="forward"
+    [routerLink]="'/change-state-step2'"
+    color="orange"
+    expand="full"
+    class="ion-no-padding ion-no-margin"
+  >
+    <ion-text style="color: white;">
+      {{'PASSO 2' | translate | titlecase }}
+    </ion-text>
+  </ion-button>
+</ion-footer>

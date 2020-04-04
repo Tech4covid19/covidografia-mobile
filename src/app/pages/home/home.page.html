@@ -16,6 +16,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+
   <ion-grid>
     <ion-row class="ion-no-padding ion-no-margin">
       <ion-col class="ion-no-padding ion-text-start" size="6">
@@ -23,7 +24,7 @@
           size="large"
           color="light"
           expand="full"
-          style="font-size: 0.9em"
+          style="font-size: 0.9em;"
         >
           <ion-icon
             slot="start"
@@ -40,7 +41,7 @@
           size="large"
           color="light"
           expand="full"
-          style="font-size: 0.9em"
+          style="font-size: 0.9em;"
         >
           <ion-icon
             slot="start"
@@ -58,12 +59,12 @@
       <ion-col size="12">
         <ion-button
           routerDirection="forward"
-          [routerLink]="'/status-update'"
+          [routerLink]="'/change-state-step1'"
           color="orange"
           shape="round"
           expand="full"
         >
-          <ion-text style="color: white">
+          <ion-text style="color: white;">
             {{'ATUALIZAR O MEU ESTADO' | translate | titlecase }}
           </ion-text>
         </ion-button>
@@ -77,21 +78,37 @@
             >{{'ESTADO NA MINHA ÁREA' | translate | titlecase }}</strong
           > </ion-text
         ><br />
-        <ion-text style="font-size: 0.8em" color="medium">
+        <ion-text
+          *ngIf="caseConditions | async as caseConditions"
+          style="font-size: 0.8em;"
+          color="medium"
+        >
           {{('BASEADO NA INFORMAÇÃO DE ' | translate | titlecase) +
-          numUtilizadores + (' UTILIZADORES' | translate | titlecase) }}
+          numConditions(caseConditions) + (' UTILIZADORES' | translate |
+          titlecase) }}
         </ion-text>
       </ion-col>
       <ion-col size="3">
-        <ion-button expand="full" fill="clear">
+        <ion-button
+          *ngIf="caseConditions | async as caseConditions"
+          expand="full"
+          fill="clear"
+        >
           <ion-icon slot="start" name="pin"></ion-icon>
-          {{postalCode}}
+          {{getPostalCode(caseConditions)}}
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <app-home-status></app-home-status>
-  <app-isolation></app-isolation>
+  <app-conditions
+    *ngIf="caseConditions | async as caseConditions"
+    [caseConditions]="caseConditions"
+  ></app-conditions>
+
+  <app-confinement
+    *ngIf="caseConfinements | async as caseConfinements"
+    [caseConfinements]="caseConfinements"
+  ></app-confinement>
   <app-home-footer></app-home-footer>
 </ion-content>

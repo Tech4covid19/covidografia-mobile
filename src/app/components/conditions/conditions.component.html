@@ -3,9 +3,11 @@
     <ion-col size="12">
       <ion-row class="symptomsCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Com sintomas')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'COM SINTOMAS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -19,9 +21,11 @@
     <ion-col size="6">
       <ion-row class="noSymptomsCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Sem sintomas')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SEM SINTOMAS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -33,9 +37,11 @@
     <ion-col size="6">
       <ion-row class="suspiciousCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Suspeitos')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SUSPEITOS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -48,9 +54,11 @@
     <ion-col size="6">
       <ion-row class="recoveredCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Recuperados')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'RECUPERADOS' | translate | titlecase
           }}</ion-text>
         </ion-col>
@@ -62,9 +70,11 @@
     <ion-col size="6">
       <ion-row class="infectedCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em">{{ numSymptoms }}</ion-text>
+          <ion-text style="font-size: 2em;">{{
+            getValue('Infetados')
+          }}</ion-text>
           <br />
-          <ion-text style="font-size: 0.9rem; font-weight: bold">{{
+          <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'INFETADOS' | translate | titlecase
           }}</ion-text>
         </ion-col>

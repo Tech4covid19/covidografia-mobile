@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { HomeStatusComponent } from './home-status.component';
+import { ChangeStateStep1Page } from './change-state-step1.page';
 
-describe('HomeStatusComponent', () => {
-  let component: HomeStatusComponent;
-  let fixture: ComponentFixture<HomeStatusComponent>;
+describe('ChangeStateStep1Page', () => {
+  let component: ChangeStateStep1Page;
+  let fixture: ComponentFixture<ChangeStateStep1Page>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeStatusComponent ],
+      declarations: [ ChangeStateStep1Page ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomeStatusComponent);
+    fixture = TestBed.createComponent(ChangeStateStep1Page);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>changeStateStep3</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let confinementState of confinementStates | async">
+      {{confinementState.state}}
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-button
+    routerDirection="root"
+    [routerLink]="'/home'"
+    color="orange"
+    expand="full"
+    class="ion-no-padding ion-no-margin"
+  >
+    <ion-text style="color: white;">
+      {{'Concluir' | translate | titlecase }}
+    </ion-text>
+  </ion-button>
+</ion-footer>
