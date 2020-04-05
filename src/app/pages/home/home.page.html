@@ -93,6 +93,7 @@
           *ngIf="caseConditions | async as caseConditions"
           expand="full"
           fill="clear"
+          (click)="openPostalCode()"
         >
           <ion-icon slot="start" name="pin"></ion-icon>
           {{getPostalCode(caseConditions)}}

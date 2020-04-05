@@ -71,6 +71,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>fb254808762195063</string>
+        </array>
+      </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>254808762195063</string>
+    <key>FacebookDisplayName</key>
+    <string>Wimlov</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fbauth2</string>
+    </array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 </dict>

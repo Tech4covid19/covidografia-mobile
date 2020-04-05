@@ -1,3 +1,4 @@
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -35,6 +36,7 @@ import { User } from './entities/user';
     StatusBar,
     SplashScreen,
     User,
+    NativeGeocoder,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],

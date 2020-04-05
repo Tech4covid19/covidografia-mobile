@@ -1,18 +1,9 @@
-import { NavParamsService } from './../../services/nav-params.service';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { Observable } from 'rxjs';
-import { IStep } from 'src/app/interfaces/IStep';
-import { ISymptom } from 'src/app/interfaces/ISymptom';
-import { SymptomsService } from './../../services/symptoms.service';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { IStep } from 'src/app/interfaces/IStep';
+import { NavParamsService } from './../../services/nav-params.service';
+import { SymptomsService } from './../../services/symptoms.service';
 
 export interface ISymptomWithChecked {
   id: number | string;
@@ -60,7 +51,9 @@ export class ChangeStateStep1Page implements OnInit {
 
   goTo(page: string) {
     this.navParams.setParams({
-      symptoms: this.symptoms.filter((s) => s.isChecked === true),
+      symptoms: this.symptoms
+        .filter((s) => s.isChecked === true)
+        .map((s) => s.id),
     });
     this.navCtrl.navigateForward(page);
   }

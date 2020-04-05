@@ -1,3 +1,4 @@
+import { IonRouterOutlet, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/entities/user';
@@ -7,6 +8,10 @@ import { CaseConditionsService } from 'src/app/services/case-conditions.service'
 import { CaseConfinementsService } from 'src/app/services/case-confinements.service';
 import { UserService } from 'src/app/services/user.service';
 import { ICaseConfinements } from './../../interfaces/icase-confinements';
+import { setStorage, getStorage } from 'src/app/services/storage.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { NavParamsService } from 'src/app/services/nav-params.service';
+import { PostCodePage } from './../post-code/post-code.page';
 
 @Component({
   selector: 'app-home',
@@ -26,19 +31,24 @@ export class HomePage implements OnInit {
     private userSvc: UserService,
     private user: User,
     private caseConfinementsService: CaseConfinementsService,
-    private caseConditionsService: CaseConditionsService
+    private caseConditionsService: CaseConditionsService,
+    private utils: UtilsService,
+    private routerOutlet: IonRouterOutlet
   ) {}
 
   async ngOnInit() {
     // Set token for testing
+    // https://staging.api.covidografia.pt/login/facebook
     sessionStorage.setItem(
       'token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiMzVmZTQwMjM5NTk5NTU1ZjBhYzYyOTEzYzM0NmRkMWFiODllYmVhMjMzZTFkZmZlZTAwOGJmNjFkYTE4MTUwZTU5ZmJlYjA0OGQ3MTM1OTczOTMxNDNmMGQzOGU1Nzg4ZmRmYTNmM2I2M2Q3YWJiYTJkMDhhNDVmNzU5YjU3NDMyMGYwMjlkYjVmMTkzOTM4YzBiZTFkNjUwYTljZDE2OWUxOTg5OGRhMWVkMTMxY2VhOWYwZmVmYjY1ZDNmMDA2Iiwic2Vzc2lvbiI6ImI1YTFjY2YzMzA2YTJlMjE0OTY3MjNlOGU2Yjk1NDI3Iiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE1ODYwMzM3OTgsImV4cCI6MTU4NjEyMDE5OH0.zdHoP9TlhHvs7RbiOn-eTeXretvV9EfJk0-bibPj4lA'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiYjJkZTA4ZjJkODYzNDUzNjVhNGRjNTY0MjlhNDcwYzkxMjI2MjhkODdmNDY5ZDIzNDAyN2Q5MzY5YzE1MzNmNzc3MjQyNTIwZjk5MjM1NmVjNzgwYmVlYmNkZWQ3ZGFjYjcwNzI3NWYzOGZmMGQwNWQxMzYzNWEwZjViMTdkNDFjM2EyMDljNTFiNzcwMDZiZTJkYzFjMmQwYmRjY2Y1MzM4YjFmMzc4ZmYyYjI3YzMzN2JjYjE2YTgzY2Q5MDA4Iiwic2Vzc2lvbiI6Ijc1ODY3YTU1NmQwYjkzNjg4YWZlNTEwMTA1NTAzZDNiIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE1ODYwOTQ0MDAsImV4cCI6MTU4NjE4MDgwMH0.JBRjd4HQ7FDOUaYUYAj911BaETNA6uEANjNR22mP6OU'
     );
 
     //TODO: This must be protected by an Angular Guard
-    if (!this.user.id) {
+    this.user = await getStorage('user');
+    if (!this.user || !this.user.id) {
       this.user = await this.userSvc.fetchUser().toPromise();
+      setStorage('user', this.user);
     }
     this.fetchData();
   }
@@ -66,5 +76,16 @@ export class HomePage implements OnInit {
 
   getPostalCode(caseConditions: Array<ICaseConditions>): string {
     return caseConditions[0].postalcode.slice(0, 4);
+  }
+
+  async openPostalCode() {
+    (
+      await this.utils.swipableModal(
+        PostCodePage,
+        this.routerOutlet.nativeEl,
+        {},
+        ''
+      )
+    ).present();
   }
 }

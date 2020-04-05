@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonRouterOutlet, NavController } from '@ionic/angular';
 import { map } from 'rxjs/operators';
+import { User } from 'src/app/entities/user';
 import { IStep } from 'src/app/interfaces/IStep';
 import { ISymptom } from 'src/app/interfaces/ISymptom';
 import { NavParamsService } from 'src/app/services/nav-params.service';
@@ -8,6 +9,7 @@ import { ICondition } from './../../interfaces/icondition';
 import { ConfinementStatesService } from './../../services/confinement-states.service';
 import { UtilsService } from './../../services/utils.service';
 import { VideoPage } from './../video/video.page';
+import { getStorage } from 'src/app/services/storage.service';
 
 export interface IConfinementStateWithChecked {
   id: number | string;
@@ -35,10 +37,12 @@ export class ChangeStateStep3Page implements OnInit {
     private navCtrl: NavController,
     private navParams: NavParamsService,
     private utils: UtilsService,
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
+    private user: User
   ) {}
 
   async ngOnInit() {
+    this.user = await getStorage('user');
     this.confinementStates = await this.confinementStatesSvc
       .fetchConfinementStates()
       .pipe(map((v) => v.map((vv) => Object.assign(vv, { isChecked: false }))))
@@ -62,9 +66,9 @@ export class ChangeStateStep3Page implements OnInit {
     this.navParams.setParams({
       symptoms: this.symptoms,
       conditions: this.conditions,
-      confinementStates: this.confinementStates.filter(
-        (s) => s.isChecked === true
-      ),
+      confinementStates: this.confinementStates
+        .filter((s) => s.isChecked === true)
+        .map((cs) => cs.id),
     });
     this.navCtrl.navigateRoot(page);
     (
@@ -78,6 +82,15 @@ export class ChangeStateStep3Page implements OnInit {
   }
 
   canGoFurther(): boolean {
+    console.log(
+      'this.symptoms',
+      this.user,
+      this.symptoms,
+      this.conditions,
+      this.confinementStates
+        .filter((s) => s.isChecked === true)
+        .map((cs) => cs.id)
+    );
     return (
       this.symptoms.length < 1 ||
       this.conditions.length < 1 ||

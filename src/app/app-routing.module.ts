@@ -35,6 +35,14 @@ const routes: Routes = [
   {
     path: 'video',
     loadChildren: () => import('./pages/video/video.module').then( m => m.VideoPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'post-code',
+    loadChildren: () => import('./pages/post-code/post-code.module').then( m => m.PostCodePageModule)
   }
 ];
 

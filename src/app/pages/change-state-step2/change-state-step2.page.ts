@@ -53,7 +53,9 @@ export class ChangeStateStep2Page implements OnInit {
   goTo(page: string) {
     this.navParams.setParams({
       symptoms: this.symptoms,
-      conditions: this.conditions.filter((s) => s.isChecked === true),
+      conditions: this.conditions
+        .filter((s) => s.isChecked === true)
+        .map((c) => c.id),
     });
     this.navCtrl.navigateRoot('change-state-step1');
     this.navCtrl.navigateForward(page);

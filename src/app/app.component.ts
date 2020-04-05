@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
@@ -15,18 +15,28 @@ export class AppComponent implements OnInit {
     {
       title: 'Home',
       url: '/home',
-      icon: 'home'
+      icon: 'home',
     },
     {
       title: 'About Us',
       url: '/about',
-      icon: 'information-circle'
+      icon: 'information-circle',
     },
     {
       title: 'Atualizar o meu estado',
       url: '/status-update',
-      icon: 'help-circle'
-    }
+      icon: 'help-circle',
+    },
+    {
+      title: 'Login FB',
+      url: '/login',
+      icon: 'arrow-red',
+    },
+    {
+      title: 'Postal Code',
+      url: '/post-code',
+      icon: 'pin',
+    },
   ];
 
   constructor(
