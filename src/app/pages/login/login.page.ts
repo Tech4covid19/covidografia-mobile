@@ -15,19 +15,18 @@ export class LoginPage implements OnInit {
   async facebookLogin() {
     const { FacebookLogin } = Plugins;
 
-    const FACEBOOK_PERMISSIONS = [
-      'email',
-      'user_birthday',
-      'user_photos',
-      'user_gender',
-    ];
+    const FACEBOOK_PERMISSIONS = ['email', 'user_birthday'];
     const result = await (<FacebookLoginResponse>(
       FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS })
     ));
 
     if (result.accessToken) {
       // Login successful.
-      console.log(`Facebook access token is ${result.accessToken.token}`);
+      console.log(
+        `Facebook access token is ${result.accessToken.token}`,
+        ' The rest is ',
+        JSON.stringify(result)
+      );
     } else {
       // Cancelled by user.
     }
@@ -47,7 +46,11 @@ export class LoginPage implements OnInit {
     ));
 
     if (result.accessToken) {
-      console.log(`Facebook access token is ${result.accessToken.token}`);
+      console.log(
+        `Facebook access token is ${result.accessToken.token}`,
+        ' The rest is ',
+        JSON.stringify(result)
+      );
     } else {
       // Not logged in.
     }
