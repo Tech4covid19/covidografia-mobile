@@ -1,18 +1,17 @@
-import { IonRouterOutlet, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import { Plugins } from '@capacitor/core';
+import { IonRouterOutlet } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/entities/user';
 import { ICase } from 'src/app/interfaces/ICase';
 import { ICaseConditions } from 'src/app/interfaces/icase-conditions';
 import { CaseConditionsService } from 'src/app/services/case-conditions.service';
 import { CaseConfinementsService } from 'src/app/services/case-confinements.service';
+import { getStorage, setStorage } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
-import { ICaseConfinements } from './../../interfaces/icase-confinements';
-import { setStorage, getStorage } from 'src/app/services/storage.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { NavParamsService } from 'src/app/services/nav-params.service';
+import { ICaseConfinements } from './../../interfaces/icase-confinements';
 import { PostCodePage } from './../post-code/post-code.page';
-import { Plugins } from '@capacitor/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -98,13 +97,18 @@ export class HomePage implements OnInit {
 
   async share() {
     const { Share } = Plugins;
-    await Share.share({
-      title: 'Covidografia',
-      text:
-        'A colaboração de todos é fundamental para que as autoridades de saúde possam acompanhar o desenvolvimento geográfico do surto de COVID-19. Só assim será possível avaliar com mais precisão a evolução da pandemia na sua área de residência.',
-      url: 'https://covidografia.pt/',
-      dialogTitle:
-        'A plataforma que tira uma fotografia instantânea aos sintomas dos portugueses',
-    });
+    try {
+      await Share.share({
+        title: 'Covidografia',
+        text:
+          'A colaboração de todos é fundamental para que as autoridades de saúde possam acompanhar o desenvolvimento geográfico do surto de COVID-19. Só assim será possível avaliar com mais precisão a evolução da pandemia na sua área de residência.',
+        url: 'https://covidografia.pt/',
+        dialogTitle:
+          'A plataforma que tira uma fotografia instantânea aos sintomas dos portugueses',
+      });
+    } catch (err) {
+      this.utils.presentToast('Erro ao tentar partilhar', 2000, 'bottom', 'Ok');
+      console.log('sharing is not possible', err);
+    }
   }
 }

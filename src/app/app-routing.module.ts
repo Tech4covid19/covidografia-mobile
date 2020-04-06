@@ -43,6 +43,10 @@ const routes: Routes = [
   {
     path: 'post-code',
     loadChildren: () => import('./pages/post-code/post-code.module').then( m => m.PostCodePageModule)
+  },
+  {
+    path: 'walkthrough',
+    loadChildren: () => import('./pages/walkthrough/walkthrough.module').then( m => m.WalkthroughPageModule)
   }
 ];
 

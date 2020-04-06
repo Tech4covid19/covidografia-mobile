@@ -1,0 +1,46 @@
+<ion-content fullscreen class="ion-padding" scroll-y="false">
+  <ion-slides>
+    <ion-slide>
+      <div class="slide">
+        <img src="/assets/walkthrough/step1.svg" />
+        <h2>Titulo</h2>
+        <p>A <b>covidografia</b> descrição</p>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <img src="/assets/walkthrough/step2.svg" />
+        <h2>Titulo</h2>
+        <p>A <b>covidografia</b> descrição</p>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <img src="/assets/walkthrough/step3.svg" />
+        <h2>Titulo</h2>
+        <p>A <b>covidografia</b> descrição</p>
+      </div>
+      <ion-button (click)="pop()" fill="clear"
+        >Continue <ion-icon slot="end" name="arrow-forward"></ion-icon
+      ></ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+<ion-footer>
+  <ion-item>
+    <ion-label>
+      Dont show this Again
+    </ion-label>
+    <ion-toggle
+      [(ngModel)]="dontShowToggle"
+      (ionChange)="dontShowThisAgain()"
+    ></ion-toggle>
+    <ion-back-button
+      color="medium"
+      size="small"
+      [text]="'Dismiss'"
+      icon="null"
+      defaultHref="/home"
+    ></ion-back-button>
+  </ion-item>
+</ion-footer>

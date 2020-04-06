@@ -30,12 +30,17 @@ export class AppComponent implements OnInit {
     {
       title: 'Login FB',
       url: '/login',
-      icon: 'arrow-red',
+      icon: 'person-circle',
     },
     {
       title: 'Postal Code',
       url: '/post-code',
-      icon: 'pin',
+      icon: 'locate',
+    },
+    {
+      title: 'Intro',
+      url: '/walkthrough',
+      icon: 'information-circle',
     },
   ];
 
