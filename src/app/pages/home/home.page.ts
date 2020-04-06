@@ -12,7 +12,7 @@ import { setStorage, getStorage } from 'src/app/services/storage.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { NavParamsService } from 'src/app/services/nav-params.service';
 import { PostCodePage } from './../post-code/post-code.page';
-
+import { Plugins } from '@capacitor/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -94,5 +94,17 @@ export class HomePage implements OnInit {
         ''
       )
     ).present();
+  }
+
+  async share() {
+    const { Share } = Plugins;
+    await Share.share({
+      title: 'Covidografia',
+      text:
+        'A colaboração de todos é fundamental para que as autoridades de saúde possam acompanhar o desenvolvimento geográfico do surto de COVID-19. Só assim será possível avaliar com mais precisão a evolução da pandemia na sua área de residência.',
+      url: 'https://covidografia.pt/',
+      dialogTitle:
+        'A plataforma que tira uma fotografia instantânea aos sintomas dos portugueses',
+    });
   }
 }
