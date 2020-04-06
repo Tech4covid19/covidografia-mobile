@@ -13,9 +13,18 @@
     <ion-col size="12">
       <ion-row class="emCasaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Em casa, preventivamente')
-          }}</ion-text>
+          <ion-text
+            *ngIf="
+              getValue(
+                caseConfinements | async,
+                'Em casa, preventivamente'
+              ) as emCasa
+            "
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="emCasa == '?'"></ion-spinner>
+            {{ emCasa == '?' ? '' : emCasa }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'EM CASA PREVENTIVAMENTE' | translate | titlecase
@@ -31,9 +40,18 @@
     <ion-col size="6">
       <ion-row class="rotinaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Rotina habitual')
-          }}</ion-text>
+          <ion-text
+            *ngIf="
+              getValue(
+                caseConfinements | async,
+                'Rotina habitual'
+              ) as rotinaHabitual
+            "
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="rotinaHabitual == '?'"></ion-spinner>
+            {{ rotinaHabitual == '?' ? '' : rotinaHabitual }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SEM SINTOMAS' | translate | titlecase
@@ -47,9 +65,13 @@
     <ion-col size="6">
       <ion-row class="isoladosCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Isolados')
-          }}</ion-text>
+          <ion-text
+            *ngIf="getValue(caseConfinements | async, 'Isolados') as isolados"
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="isolados == '?'"></ion-spinner>
+            {{ isolados == '?' ? '' : isolados }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SUSPEITOS' | translate | titlecase

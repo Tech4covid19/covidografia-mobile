@@ -1,3 +1,6 @@
+import { UserService } from 'src/app/services/user.service';
+import { ICase } from './../../interfaces/ICase';
+import { CasesService } from './../../services/cases.service';
 import { Component, OnInit } from '@angular/core';
 import { IonRouterOutlet, NavController } from '@ionic/angular';
 import { map } from 'rxjs/operators';
@@ -10,6 +13,7 @@ import { ConfinementStatesService } from './../../services/confinement-states.se
 import { UtilsService } from './../../services/utils.service';
 import { VideoPage } from './../video/video.page';
 import { getStorage } from 'src/app/services/storage.service';
+import { IGeo } from 'src/app/interfaces/IGeo';
 
 export interface IConfinementStateWithChecked {
   id: number | string;
@@ -29,16 +33,18 @@ export class ChangeStateStep3Page implements OnInit {
     { label: '2', url: 'change-state-step2', active: false },
     { label: '3', url: 'change-state-step3', active: true },
   ];
-  symptoms: Array<ISymptom>;
-  conditions: Array<ICondition>;
+  symptoms: Array<number>;
+  conditions: Array<number>;
 
   constructor(
     private confinementStatesSvc: ConfinementStatesService,
+    private caseSvc: CasesService,
     private navCtrl: NavController,
     private navParams: NavParamsService,
     private utils: UtilsService,
     private routerOutlet: IonRouterOutlet,
-    private user: User
+    private user: User,
+    private userSvc: UserService
   ) {}
 
   async ngOnInit() {
@@ -63,13 +69,7 @@ export class ChangeStateStep3Page implements OnInit {
   }
 
   async goTo(page: string) {
-    this.navParams.setParams({
-      symptoms: this.symptoms,
-      conditions: this.conditions,
-      confinementStates: this.confinementStates
-        .filter((s) => s.isChecked === true)
-        .map((cs) => cs.id),
-    });
+    this.addCase();
     this.navCtrl.navigateRoot(page);
     (
       await this.utils.swipableModal(
@@ -96,5 +96,22 @@ export class ChangeStateStep3Page implements OnInit {
       this.conditions.length < 1 ||
       this.confinementStates.filter((s) => s.isChecked === true).length < 1
     );
+  }
+
+  async addCase() {
+    const _case: ICase = {
+      id: 0,
+      postalCode: this.user.postalcode,
+      geo: { lat: +this.user.latitude, lon: +this.user.longitude },
+      condition: this.conditions[0],
+      symptoms: this.symptoms,
+      confinementState: +this.confinementStates
+        .filter((s) => s.isChecked === true)
+        .map((cs) => cs.id)[0],
+      timestamp: Date.now().toString(),
+    };
+    const resp = this.caseSvc.addCase(_case);
+    const respUser = this.userSvc.updateOnboarding(this.user);
+    console.log('case', _case, await resp, await respUser);
   }
 }

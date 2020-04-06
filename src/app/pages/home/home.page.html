@@ -78,15 +78,19 @@
             >{{'ESTADO NA MINHA ÁREA' | translate | titlecase }}</strong
           > </ion-text
         ><br />
+        <ion-text style="font-size: 0.8em;" color="medium">
+          {{('BASEADO NA INFORMAÇÃO DE ' | translate | titlecase)}}
+        </ion-text>
         <ion-text
-          *ngIf="caseConditions | async as caseConditions"
           style="font-size: 0.8em;"
           color="medium"
+          *ngIf="caseConditions | async as caseConditions"
         >
-          {{('BASEADO NA INFORMAÇÃO DE ' | translate | titlecase) +
-          numConditions(caseConditions) + (' UTILIZADORES' | translate |
-          titlecase) }}
+          {{numConditions(caseConditions)}} {{(' UTILIZADOR' | translate |
+          titlecase) + (numConditions(caseConditions) != 1 ? ('ES' | translate |
+          lowercase) : '')}}
         </ion-text>
+        <ion-spinner *ngIf="!(caseConditions | async)"></ion-spinner>
       </ion-col>
       <ion-col size="3">
         <ion-button
@@ -102,14 +106,8 @@
     </ion-row>
   </ion-grid>
 
-  <app-conditions
-    *ngIf="caseConditions | async as caseConditions"
-    [caseConditions]="caseConditions"
-  ></app-conditions>
+  <app-conditions [caseConditions]="caseConditions"></app-conditions>
 
-  <app-confinement
-    *ngIf="caseConfinements | async as caseConfinements"
-    [caseConfinements]="caseConfinements"
-  ></app-confinement>
+  <app-confinement [caseConfinements]="caseConfinements"></app-confinement>
   <app-home-footer></app-home-footer>
 </ion-content>

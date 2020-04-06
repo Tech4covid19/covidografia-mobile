@@ -3,9 +3,15 @@
     <ion-col size="12">
       <ion-row class="symptomsCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Com sintomas')
-          }}</ion-text>
+          <ion-text
+            *ngIf="
+              getValue(caseConditions | async, 'Com sintomas') as comSintomas
+            "
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="comSintomas == '?'"></ion-spinner>
+            {{ comSintomas == '?' ? '' : comSintomas }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'COM SINTOMAS' | translate | titlecase
@@ -21,9 +27,15 @@
     <ion-col size="6">
       <ion-row class="noSymptomsCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Sem sintomas')
-          }}</ion-text>
+          <ion-text
+            *ngIf="
+              getValue(caseConditions | async, 'Sem sintomas') as semSintomas
+            "
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="semSintomas == '?'"></ion-spinner>
+            {{ semSintomas == '?' ? '' : semSintomas }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SEM SINTOMAS' | translate | titlecase
@@ -37,9 +49,13 @@
     <ion-col size="6">
       <ion-row class="suspiciousCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Suspeitos')
-          }}</ion-text>
+          <ion-text
+            *ngIf="getValue(caseConditions | async, 'Suspeitos') as suspeitos"
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="suspeitos == '?'"></ion-spinner>
+            {{ suspeitos == '?' ? '' : suspeitos }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'SUSPEITOS' | translate | titlecase
@@ -54,9 +70,15 @@
     <ion-col size="6">
       <ion-row class="recoveredCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Recuperados')
-          }}</ion-text>
+          <ion-text
+            *ngIf="
+              getValue(caseConditions | async, 'Recuperados') as recuperados
+            "
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="recuperados == '?'"></ion-spinner>
+            {{ recuperados == '?' ? '' : recuperados }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'RECUPERADOS' | translate | titlecase
@@ -70,9 +92,13 @@
     <ion-col size="6">
       <ion-row class="infectedCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text style="font-size: 2em;">{{
-            getValue('Infetados')
-          }}</ion-text>
+          <ion-text
+            *ngIf="getValue(caseConditions | async, 'Infetados') as infetados"
+            style="font-size: 2em;"
+          >
+            <ion-spinner *ngIf="infetados == '?'"></ion-spinner>
+            {{ infetados == '?' ? '' : infetados }}</ion-text
+          >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
             'INFETADOS' | translate | titlecase

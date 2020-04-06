@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ICaseConfinements } from '../../interfaces/icase-confinements';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-confinement',
@@ -7,16 +8,18 @@ import { ICaseConfinements } from '../../interfaces/icase-confinements';
   styleUrls: ['./confinement.component.scss'],
 })
 export class ConfinementComponent implements OnInit {
-  @Input() caseConfinements: Array<ICaseConfinements>;
+  @Input() caseConfinements: Observable<Array<ICaseConfinements>>;
 
   constructor() {}
 
   ngOnInit() {}
 
-  getValue(fieldFilter: string): string {
-    if (this.caseConfinements == null || this.caseConfinements.length < 1)
-      return '?';
-    return this.caseConfinements
+  getValue(
+    caseConfinements: Array<ICaseConfinements>,
+    fieldFilter: string
+  ): string {
+    if (caseConfinements == null || caseConfinements.length < 1) return '?';
+    return caseConfinements
       .filter((x) => x.confinement_state_text === fieldFilter)[0]
       .confinement_state.toString();
   }

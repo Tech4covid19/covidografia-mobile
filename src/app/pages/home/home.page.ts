@@ -50,6 +50,7 @@ export class HomePage implements OnInit {
       this.user = await this.userSvc.fetchUser().toPromise();
       setStorage('user', this.user);
     }
+    console.log('user', this.user);
     this.fetchData();
   }
 
@@ -59,6 +60,12 @@ export class HomePage implements OnInit {
     );
     this.caseConditions = this.caseConditionsService.fetchCaseConditionsByPostalCode(
       this.user.postalcode
+    );
+
+    console.log(
+      'tag',
+      await this.caseConfinements.toPromise(),
+      await this.caseConditions.toPromise()
     );
   }
 

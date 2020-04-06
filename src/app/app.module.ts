@@ -15,6 +15,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { User } from './entities/user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,8 @@ import { User } from './entities/user';
         deps: [HttpClient],
       },
     }),
+    ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [
     StatusBar,

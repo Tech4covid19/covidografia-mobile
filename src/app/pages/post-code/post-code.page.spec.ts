@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-
 import { PostCodePage } from './post-code.page';
+
 
 describe('PostCodePage', () => {
   let component: PostCodePage;
@@ -9,8 +10,8 @@ describe('PostCodePage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostCodePage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [PostCodePage],
+      imports: [IonicModule.forRoot(), FormsModule, ReactiveFormsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostCodePage);

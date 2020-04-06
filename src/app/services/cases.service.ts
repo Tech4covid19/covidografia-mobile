@@ -17,4 +17,14 @@ export class CasesService {
       }),
     });
   }
+
+  addCase(_case: ICase): Promise<any> {
+    return this.http
+      .post(environment.base_api + '/case', _case, {
+        headers: new HttpHeaders({
+          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        }),
+      })
+      .toPromise();
+  }
 }

@@ -11,15 +11,22 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   fetchUser(): Observable<User> {
-    return this.http.get<User>(
+    return this.http.get<User>(environment.base_api + '/user', {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+      }),
+    });
+  }
+
+  updateOnboarding(user: User) {
+    return this.http.put(
       environment.base_api + '/user',
+      Object.assign(user, { showOnboarding: false }),
       {
         headers: new HttpHeaders({
-          Authorization:
-            'Bearer ' + sessionStorage.getItem('token'),
+          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
         }),
       }
-    );
+    ).toPromise();
   }
 }
-
