@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { FacebookLoginResponse } from '@rdlabo/capacitor-facebook-login';
+import { defer } from 'rxjs';
+import { HTTP } from '@ionic-native/http/ngx';
+import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +12,7 @@ import { FacebookLoginResponse } from '@rdlabo/capacitor-facebook-login';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  constructor() {}
+  constructor(private nativeHttp: HTTP) {}
 
   ngOnInit() {}
 
@@ -27,6 +31,20 @@ export class LoginPage implements OnInit {
         ' The rest is ',
         JSON.stringify(result)
       );
+
+      this.nativeHttp
+        .post(
+          environment.base_api + '/login/facebook/token',
+          {
+            access_token: result.accessToken.token,
+          },
+          { Accept: '*/*', 'content-type': 'application/json' }
+        )
+        .then((response) => {
+          const token = response.data.token;
+          sessionStorage.setItem('token', token);
+          console.log('token after fbauth', token);
+        });
     } else {
       // Cancelled by user.
     }

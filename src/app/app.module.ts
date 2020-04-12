@@ -1,3 +1,4 @@
+import { HTTP } from '@ionic-native/http/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -16,6 +17,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { User } from './entities/user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { ConditionsEffects } from './effects/conditions.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +41,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     }),
     ReactiveFormsModule,
     FormsModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+      },
+    }),
+    EffectsModule.forRoot([
+      //ConditionsEffects
+    ]),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [
     StatusBar,
@@ -41,6 +59,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     User,
     NativeGeocoder,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    HTTP,
   ],
   bootstrap: [AppComponent],
 })

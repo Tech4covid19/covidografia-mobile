@@ -1,6 +1,11 @@
+import { ConfinementsState } from './../../reducers/confinements.reducer';
 import { Component, Input, OnInit } from '@angular/core';
 import { ICaseConfinements } from '../../interfaces/icase-confinements';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { ConditionsState } from 'src/app/reducers/conditions.reducer';
+import { map } from 'rxjs/operators';
+import { State } from 'src/app/reducers';
 
 @Component({
   selector: 'app-confinement',
@@ -8,19 +13,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./confinement.component.scss'],
 })
 export class ConfinementComponent implements OnInit {
-  @Input() caseConfinements: Observable<Array<ICaseConfinements>>;
+  caseConfinements: Observable<Array<ICaseConfinements>>;
 
-  constructor() {}
+  constructor(private store: Store<State>) {}
 
-  ngOnInit() {}
-
-  getValue(
-    caseConfinements: Array<ICaseConfinements>,
-    fieldFilter: string
-  ): string {
-    if (caseConfinements == null || caseConfinements.length < 1) return '?';
-    return caseConfinements
-      .filter((x) => x.confinement_state_text === fieldFilter)[0]
-      .confinement_state.toString();
+  ngOnInit() {
+    this.caseConfinements = this.store.select(
+      (state) => state.confinements.confinements
+    );
   }
 }

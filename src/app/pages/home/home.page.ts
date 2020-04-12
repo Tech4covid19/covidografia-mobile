@@ -1,17 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { IonRouterOutlet } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { loadConditions } from 'src/app/actions/conditions.actions';
 import { User } from 'src/app/entities/user';
 import { ICase } from 'src/app/interfaces/ICase';
 import { ICaseConditions } from 'src/app/interfaces/icase-conditions';
+import { State } from 'src/app/reducers';
 import { CaseConditionsService } from 'src/app/services/case-conditions.service';
 import { CaseConfinementsService } from 'src/app/services/case-confinements.service';
 import { getStorage, setStorage } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { loadConfinements } from './../../actions/confinements.actions';
+import { loadUser } from './../../actions/user.actions';
 import { ICaseConfinements } from './../../interfaces/icase-confinements';
 import { PostCodePage } from './../post-code/post-code.page';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -22,8 +29,8 @@ export class HomePage implements OnInit {
   numUtilizadores: number = 0;
   postalCode: number = 0;
   numSymptoms: number = 0;
-  cases: Observable<Array<ICase>>;
-  caseConfinements: Observable<Array<ICaseConfinements>>;
+  cases: Observable<Array<ICase>> = of([]);
+  caseConfinements: Observable<Array<ICaseConfinements>> = of();
   caseConditions: Observable<Array<ICaseConditions>>;
 
   constructor(
@@ -32,40 +39,64 @@ export class HomePage implements OnInit {
     private caseConfinementsService: CaseConfinementsService,
     private caseConditionsService: CaseConditionsService,
     private utils: UtilsService,
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
+    private store: Store<State>
   ) {}
 
   async ngOnInit() {
+    this.caseConditions = this.store
+      .select((state) => state.conditions)
+      .pipe(map((c) => c.conditions));
+
+    this.caseConfinements = this.store
+      .select((state) => state.confinements)
+      .pipe(map((c) => c.confinements));
+
     // Set token for testing
     // https://staging.api.covidografia.pt/login/facebook
     sessionStorage.setItem(
       'token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiYjJkZTA4ZjJkODYzNDUzNjVhNGRjNTY0MjlhNDcwYzkxMjI2MjhkODdmNDY5ZDIzNDAyN2Q5MzY5YzE1MzNmNzc3MjQyNTIwZjk5MjM1NmVjNzgwYmVlYmNkZWQ3ZGFjYjcwNzI3NWYzOGZmMGQwNWQxMzYzNWEwZjViMTdkNDFjM2EyMDljNTFiNzcwMDZiZTJkYzFjMmQwYmRjY2Y1MzM4YjFmMzc4ZmYyYjI3YzMzN2JjYjE2YTgzY2Q5MDA4Iiwic2Vzc2lvbiI6Ijc1ODY3YTU1NmQwYjkzNjg4YWZlNTEwMTA1NTAzZDNiIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE1ODYwOTQ0MDAsImV4cCI6MTU4NjE4MDgwMH0.JBRjd4HQ7FDOUaYUYAj911BaETNA6uEANjNR22mP6OU'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiM2QyYTAyNjQ1MDM1ZTU0OWQ3MTFkMTBjYTdiMzQ2YjFkZjkwMzc4NWI5YTkxMWE5OTQwMDE5ZDFkMDAwNTA5M2Q3YjQzZWI3NzM4OTliYjk1MTRlNGM2N2M4MTQ5ZTZiYmRkZDg1YjU3ZjAzZmJlMDQ2MWYzZjg5ZjdhOTE1M2FkZTEyMzQxYjllZTEwYTFjYTlkYzlkNTA3MTA1MzE1ZTUzNjUxMjllNmIxNDI5NjQ3MDdkOWJjMDM0YjQyOTdkIiwic2Vzc2lvbiI6ImU1N2U2MTE3Y2I3ZGMxMGE5NWU4YTQzOTIxNzEyYWVjIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE1ODY2MjU4NzcsImV4cCI6MTU4NjcxMjI3N30.0g5No5k2G4giLddC3BKCVl1kqPVVND1O7CvUC20Zqow'
     );
+    this.setCurrentUser();
+  }
 
+  async setCurrentUser() {
     //TODO: This must be protected by an Angular Guard
-    this.user = await getStorage('user');
-    if (!this.user || !this.user.id) {
-      this.user = await this.userSvc.fetchUser().toPromise();
+    const user = await getStorage('user');
+    this.store.dispatch(loadUser(user));
+
+    this.userSvc.fetchUser().subscribe((user) => {
+      console.log('got user', user);
+      this.user = user;
       setStorage('user', this.user);
-    }
-    console.log('user', this.user);
-    this.fetchData();
+      this.fetchData();
+    });
   }
 
   async fetchData() {
-    this.caseConfinements = this.caseConfinementsService.fetchCaseConfinementsByPostalCode(
-      this.user.postalcode
-    );
-    this.caseConditions = this.caseConditionsService.fetchCaseConditionsByPostalCode(
-      this.user.postalcode
-    );
+    this.caseConfinementsService
+      .fetchCaseConfinementsByPostalCode(this.user.postalcode)
+      .subscribe((c) => {
+        console.log('c________ ', c);
+        this.store.dispatch(
+          loadConfinements({
+            zipcode: this.user.postalcode,
+            confinements: c,
+          })
+        );
+      });
 
-    console.log(
-      'tag',
-      await this.caseConfinements.toPromise(),
-      await this.caseConditions.toPromise()
-    );
+    this.caseConditionsService
+      .fetchCaseConditionsByPostalCode(this.user.postalcode)
+      .subscribe((c) => {
+        this.store.dispatch(
+          loadConditions({
+            zipcode: this.user.postalcode,
+            conditions: c,
+          })
+        );
+      });
   }
 
   async doRefresh(event) {
@@ -81,6 +112,7 @@ export class HomePage implements OnInit {
   }
 
   getPostalCode(caseConditions: Array<ICaseConditions>): string {
+    if (caseConditions == null || caseConditions.length < 1) return '?';
     return caseConditions[0].postalcode.slice(0, 4);
   }
 

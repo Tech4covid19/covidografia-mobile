@@ -1,5 +1,5 @@
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { GeoService } from './../../servives/geo.service';
+import { GeoService } from '../../services/geo.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { User } from 'src/app/entities/user';
 import { GeolocationPosition } from '@capacitor/core';
@@ -38,12 +38,10 @@ export class PostCodePage implements OnInit {
     this.minYear = this.maxYear - 120;
 
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
       'birth-year': ['', Validators.required],
       'zip-code-1': ['', Validators.required],
       'zip-code-2': ['', Validators.required],
-      'covidografia-code': ['', Validators.required],
+      'covidografia-code': [''],
     });
   }
 
@@ -60,12 +58,16 @@ export class PostCodePage implements OnInit {
         currentPosition.coords.latitude,
         currentPosition.coords.longitude
       );
-      if (c.length > 0) this.postalCode = c[0].postalCode;
-      this.changeRef.detectChanges();
+      if (c.length > 0) {
+        this.postalCode = c[0].postalCode;
+        this.form.controls['zip-code-1'].setValue(c[0].postalCode);
+        this.changeRef.detectChanges();
+      }
     } catch (err) {}
 
     this.userService.fetchUser().subscribe((user) => {
       this.user = { ...user };
+      console.log('u__', this.user);
       this.showBackground = !user || user.show_onboarding;
       this.form.controls['birth-year'].setValue(this.user?.year);
       this.form.controls['zip-code-1'].setValue(this.user?.postalcode1);
@@ -132,6 +134,9 @@ export class PostCodePage implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.user.postalcode = this.form.value['zip-code-1'];
+    console.log('this.user.posr', this.user.postalcode);
+    //this.userSvc.updatePostalCode(this.user);
     if (this.form.valid) {
       //this._updateUserData(this.form.value);
 

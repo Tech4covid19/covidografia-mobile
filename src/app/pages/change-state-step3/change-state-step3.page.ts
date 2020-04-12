@@ -12,7 +12,7 @@ import { ICondition } from './../../interfaces/icondition';
 import { ConfinementStatesService } from './../../services/confinement-states.service';
 import { UtilsService } from './../../services/utils.service';
 import { VideoPage } from './../video/video.page';
-import { getStorage } from 'src/app/services/storage.service';
+import { getStorage, setStorage } from 'src/app/services/storage.service';
 import { IGeo } from 'src/app/interfaces/IGeo';
 
 export interface IConfinementStateWithChecked {
@@ -82,15 +82,6 @@ export class ChangeStateStep3Page implements OnInit {
   }
 
   canGoFurther(): boolean {
-    console.log(
-      'this.symptoms',
-      this.user,
-      this.symptoms,
-      this.conditions,
-      this.confinementStates
-        .filter((s) => s.isChecked === true)
-        .map((cs) => cs.id)
-    );
     return (
       this.symptoms.length < 1 ||
       this.conditions.length < 1 ||
@@ -110,8 +101,7 @@ export class ChangeStateStep3Page implements OnInit {
         .map((cs) => cs.id)[0],
       timestamp: Date.now().toString(),
     };
-    const resp = this.caseSvc.addCase(_case);
-    const respUser = this.userSvc.updateOnboarding(this.user);
-    console.log('case', _case, await resp, await respUser);
+    this.caseSvc.addCase(_case);
+    this.userSvc.updateOnboarding(this.user);
   }
 }

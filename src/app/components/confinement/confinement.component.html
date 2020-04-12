@@ -1,4 +1,4 @@
-<ion-grid>
+<ion-grid *ngIf="caseConfinements | async as caseConfinements">
   <ion-row>
     <ion-col size="12" class="ion-text-start">
       <ion-text color="dark">
@@ -9,25 +9,17 @@
     </ion-col>
   </ion-row>
 
-  <ion-row>
+  <ion-row *ngIf="caseConfinements[0] as c">
     <ion-col size="12">
       <ion-row class="emCasaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text
-            *ngIf="
-              getValue(
-                caseConfinements | async,
-                'Em casa, preventivamente'
-              ) as emCasa
-            "
-            style="font-size: 2em;"
-          >
-            <ion-spinner *ngIf="emCasa == '?'"></ion-spinner>
-            {{ emCasa == '?' ? '' : emCasa }}</ion-text
+          <ion-text style="font-size: 2em;">
+            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
+            {{ c.confinement_state < 0 ? '' : c.confinement_state }}</ion-text
           >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            'EM CASA PREVENTIVAMENTE' | translate | titlecase
+            c.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">
@@ -37,24 +29,16 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col size="6">
+    <ion-col size="6" *ngIf="caseConfinements[1] as c">
       <ion-row class="rotinaCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text
-            *ngIf="
-              getValue(
-                caseConfinements | async,
-                'Rotina habitual'
-              ) as rotinaHabitual
-            "
-            style="font-size: 2em;"
-          >
-            <ion-spinner *ngIf="rotinaHabitual == '?'"></ion-spinner>
-            {{ rotinaHabitual == '?' ? '' : rotinaHabitual }}</ion-text
+          <ion-text style="font-size: 2em;">
+            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
+            {{ c.confinement_state < 0 ? '' : c.confinement_state }}</ion-text
           >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            'SEM SINTOMAS' | translate | titlecase
+            c.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">
@@ -62,19 +46,16 @@
         </ion-col>
       </ion-row>
     </ion-col>
-    <ion-col size="6">
+    <ion-col size="6" *ngIf="caseConfinements[2] as c">
       <ion-row class="isoladosCard">
         <ion-col class="ion-padding" size="6">
-          <ion-text
-            *ngIf="getValue(caseConfinements | async, 'Isolados') as isolados"
-            style="font-size: 2em;"
-          >
-            <ion-spinner *ngIf="isolados == '?'"></ion-spinner>
-            {{ isolados == '?' ? '' : isolados }}</ion-text
-          >
+          <ion-text style="font-size: 2em;">
+            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
+            {{ c.confinement_state < 0 ? '' : c.confinement_state }}
+          </ion-text>
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            'SUSPEITOS' | translate | titlecase
+            c.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">

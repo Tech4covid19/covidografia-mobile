@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, of } from 'rxjs';
 import { ICaseConditions } from 'src/app/interfaces/icase-conditions';
+import { State } from 'src/app/reducers';
 
 @Component({
   selector: 'app-conditions',
@@ -8,18 +10,28 @@ import { ICaseConditions } from 'src/app/interfaces/icase-conditions';
   styleUrls: ['./conditions.component.scss'],
 })
 export class ConditionsComponent implements OnInit {
-  @Input() caseConditions: Observable<Array<ICaseConditions>>;
-  constructor() {}
+  caseConditions: Observable<Array<ICaseConditions>> = of([]);
 
-  ngOnInit() {}
+  constructor(private store: Store<State>) {}
 
-  getValue(
-    caseConditions: Array<ICaseConditions>,
-    fieldFilter: string
-  ): string {
-    if (caseConditions == null || caseConditions.length < 1) return '?';
-    return caseConditions
-      .filter((x) => x.status_text === fieldFilter)[0]
-      .status.toString();
+  async ngOnInit() {
+    this.caseConditions = this.store.select(
+      (state) => state.conditions.conditions
+    );
+  }
+
+  decideClass(condition: ICaseConditions): string {
+    switch (condition.summary_order) {
+      case 6:
+        return 'noSymptomsCard';
+      case 10:
+        return 'suspiciousCard';
+      case 20:
+        return 'recoveredCard';
+      case 30:
+        return 'infectedCard';
+      default:
+        return 'symptomsCard';
+    }
   }
 }
