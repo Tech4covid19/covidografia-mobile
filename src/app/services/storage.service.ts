@@ -12,8 +12,9 @@ export async function setStorage(key: string, value: any): Promise<void> {
 export async function getStorage(key: string): Promise<any> {
   const item = await Storage.get({ key: key });
   if (!item.value || item.value !== 'undefined') {
-    console.log('storage', JSON.parse(item.value));
-    return JSON.parse(item.value);
+    return Promise.resolve(JSON.parse(item.value));
+  } else {
+    Promise.resolve({});
   }
 }
 

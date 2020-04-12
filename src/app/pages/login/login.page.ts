@@ -15,6 +15,7 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     const token = await getStorage('token');
+    console.log('_token', token);
     this.webToken = token.token;
   }
 
