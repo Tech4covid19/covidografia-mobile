@@ -16,4 +16,13 @@
   <ion-button expand="full" (click)="getCurrentAccessToken()">
     getCurrentAccessToken
   </ion-button>
+
+  <ion-input [(ngModel)]="webToken">Web token</ion-input>
+  <ion-button expand="full" (click)="webTestLogin()">
+    Submit web token
+  </ion-button>
+
+  <pre>
+    {{webToken | json}}
+  </pre>
 </ion-content>

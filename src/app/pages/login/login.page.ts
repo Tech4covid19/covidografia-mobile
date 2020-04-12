@@ -1,10 +1,8 @@
+import { NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { Plugins } from '@capacitor/core';
-import { FacebookLoginResponse } from '@rdlabo/capacitor-facebook-login';
-import { defer } from 'rxjs';
-import { HTTP } from '@ionic-native/http/ngx';
-import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { setStorage, getStorage } from 'src/app/services/storage.service';
+import { AuthService } from './../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,66 +10,32 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  constructor(private nativeHttp: HTTP) {}
+  webToken: string;
+  constructor(private authSvc: AuthService, private navCtrl: NavController) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    const token = await getStorage('token');
+    this.webToken = token.token;
+  }
 
   async facebookLogin() {
-    const { FacebookLogin } = Plugins;
-
-    const FACEBOOK_PERMISSIONS = ['email', 'user_birthday'];
-    const result = await (<FacebookLoginResponse>(
-      FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS })
-    ));
-
-    if (result.accessToken) {
-      // Login successful.
-      console.log(
-        `Facebook access token is ${result.accessToken.token}`,
-        ' The rest is ',
-        JSON.stringify(result)
-      );
-      this.getUserToken(result.accessToken.token);
-    } else {
-      // Cancelled by user.
-    }
+    return this.authSvc.facebookLogin();
   }
 
   async logoutFacebook() {
-    const { FacebookLogin } = Plugins;
-
-    await FacebookLogin.logout();
+    return this.authSvc.logoutFacebook();
   }
 
   async getCurrentAccessToken() {
-    const { FacebookLogin } = Plugins;
-
-    const result = await (<FacebookLoginResponse>(
-      FacebookLogin.getCurrentAccessToken()
-    ));
-
-    if (result.accessToken) {
-      console.log(`Facebook access token is ${result.accessToken.token}`);
-      this.getUserToken(result.accessToken.token);
-    } else {
-      // Not logged in.
-    }
+    return this.authSvc.getCurrentFacebookAccessToken();
   }
 
-  getUserToken(token: string) {
-    this.nativeHttp.setDataSerializer('json');
-    this.nativeHttp
-      .post(
-        environment.base_api + '/login/facebook/token',
-        {
-          access_token: token,
-        },
-        { 'Content-Type': 'application/json' }
-      )
-      .then((response) => {
-        const token = JSON.parse(response.data).token;
-        sessionStorage.setItem('token', token);
-      })
-      .catch((err) => console.log('err getting token', JSON.stringify(err)));
+  async webTestLogin() {
+    console.log(this.webToken);
+    setStorage('token', { token: this.webToken, fetchedAt: moment() }).then(
+      () => {
+        this.navCtrl.navigateForward('home');
+      }
+    );
   }
 }

@@ -19,6 +19,7 @@ import { loadUser } from './../../actions/user.actions';
 import { ICaseConfinements } from './../../interfaces/icase-confinements';
 import { PostCodePage } from './../post-code/post-code.page';
 import { VideoPage } from './../video/video.page';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -58,12 +59,6 @@ export class HomePage implements OnInit {
       .select((state) => state.user)
       .pipe(map((c) => c.user));
 
-    // Set token for testing
-    // https://staging.api.covidografia.pt/login/facebook
-    sessionStorage.setItem(
-      'token',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiM2QyYTAyNjQ1MDM1ZTU0OWQ3MTFkMTBjYTdiMzQ2YjFkZjkwMzc4NWI5YTkxMWE5OTQwMDE5ZDFkMDAwNTA5M2Q3YjQzZWI3NzM4OTliYjk1MTRlNGM2N2M4MTQ5ZTZiYmRkZDg1YjU3ZjAzZmJlMDQ2MWYzZjg5ZjdhOTE1M2FkZTEyMzQxYjllZTEwYTFjYTlkYzlkNTA3MTA1MzE1ZTUzNjUxMjllNmIxNDI5NjQ3MDdkOWJjMDM0YjQyOTdkIiwic2Vzc2lvbiI6ImU1N2U2MTE3Y2I3ZGMxMGE5NWU4YTQzOTIxNzEyYWVjIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE1ODY2MjU4NzcsImV4cCI6MTU4NjcxMjI3N30.0g5No5k2G4giLddC3BKCVl1kqPVVND1O7CvUC20Zqow'
-    );
     this.setCurrentUser();
   }
 

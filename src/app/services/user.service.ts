@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { HTTP } from '@ionic-native/http/ngx';
 import { Platform } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { defer, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { defer, from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { State } from 'src/app/reducers';
+import { getStorage } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
 import { loadUser } from '../actions/user.actions';
 import { User } from '../entities/user';
@@ -23,33 +24,44 @@ export class UserService {
 
   fetchUser(): Observable<User> {
     if (this.platform.is('ios') || this.platform.is('android')) {
-      return defer(() =>
-        this.nativeHttp.get(
-          environment.base_api + '/user',
-          {},
-          {
-            Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-          }
-        )
-      ).pipe(map((response) => JSON.parse(response.data)));
+      return from(getStorage('token')).pipe(
+        switchMap((token) => {
+          console.log('VALLEJO_token', JSON.stringify(token.token));
+          return defer(() =>
+            this.nativeHttp.get(
+              environment.base_api + '/user',
+              {},
+              {
+                Authorization: 'Bearer ' + token.token,
+              }
+            )
+          ).pipe(map((response) => JSON.parse(response.data)));
+        })
+      );
     } else {
-      return this.webHttp.get<User>(environment.base_api + '/user', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-        }),
-      });
+      return from(getStorage('token')).pipe(
+        switchMap((token) => {
+          console.log('VALLEJO_token', token.token);
+          return this.webHttp.get<User>(environment.base_api + '/user', {
+            headers: new HttpHeaders({
+              Authorization: 'Bearer ' + token.token,
+            }),
+          });
+        })
+      );
     }
   }
 
-  updateOnboarding(user: User) {
+  async updateOnboarding(user: User) {
     this.store.dispatch(loadUser(user));
+    const token = (await getStorage('token')).token;
     if (this.platform.is('ios') || this.platform.is('android')) {
       return defer(() =>
         this.nativeHttp.put(
           environment.base_api + '/user',
           Object.assign(user, { showOnboarding: false }),
           {
-            Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            Authorization: 'Bearer ' + token,
           }
         )
       ).toPromise();
@@ -60,7 +72,7 @@ export class UserService {
           Object.assign(user, { showOnboarding: false }),
           {
             headers: new HttpHeaders({
-              Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+              Authorization: 'Bearer ' + token,
             }),
           }
         )
@@ -68,15 +80,16 @@ export class UserService {
     }
   }
 
-  updatePostalCode(user: User) {
+  async updatePostalCode(user: User) {
     this.store.dispatch(loadUser(user));
+    const token = (await getStorage('token')).token;
     if (this.platform.is('ios') || this.platform.is('android')) {
       return defer(() =>
         this.nativeHttp.put(
           environment.base_api + '/user',
           Object.assign(user, { postalCode: user.postalcode }),
           {
-            Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            Authorization: 'Bearer ' + token,
           }
         )
       ).toPromise();
@@ -87,7 +100,7 @@ export class UserService {
           Object.assign(user, { postalCode: user.postalcode }),
           {
             headers: new HttpHeaders({
-              Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+              Authorization: 'Bearer ' + token,
             }),
           }
         )

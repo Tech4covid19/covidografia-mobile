@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { IonRouterOutlet } from '@ionic/angular';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -12,6 +12,7 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomePageModule),
+    canActivate: [AuthGuard],
   },
   {
     path: 'about',
@@ -19,18 +20,12 @@ const routes: Routes = [
       import('./pages/about/about.module').then((m) => m.AboutPageModule),
   },
   {
-    path: 'status-update',
-    loadChildren: () =>
-      import('./pages/status-update/status-update.module').then(
-        (m) => m.StatusUpdatePageModule
-      ),
-  },
-  {
     path: 'change-state-step1',
     loadChildren: () =>
       import('./pages/change-state-step1/change-state-step1.module').then(
         (m) => m.ChangeStateStep1PageModule
       ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'change-state-step2',
@@ -38,6 +33,7 @@ const routes: Routes = [
       import('./pages/change-state-step2/change-state-step2.module').then(
         (m) => m.ChangeStateStep2PageModule
       ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'change-state-step3',
@@ -45,11 +41,13 @@ const routes: Routes = [
       import('./pages/change-state-step3/change-state-step3.module').then(
         (m) => m.ChangeStateStep3PageModule
       ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'video',
     loadChildren: () =>
       import('./pages/video/video.module').then((m) => m.VideoPageModule),
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
@@ -62,6 +60,7 @@ const routes: Routes = [
       import('./pages/post-code/post-code.module').then(
         (m) => m.PostCodePageModule
       ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'walkthrough',
