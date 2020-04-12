@@ -70,6 +70,7 @@ export class HomePage implements OnInit {
       console.log('got user', user);
       this.user = user;
       setStorage('user', this.user);
+      this.store.dispatch(loadUser(user));
       this.fetchData();
     });
   }

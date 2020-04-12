@@ -1,15 +1,18 @@
-import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { GeoService } from '../../services/geo.service';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { User } from 'src/app/entities/user';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeolocationPosition } from '@capacitor/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+import { IonRouterOutlet, NavController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { User } from 'src/app/entities/user';
+import { State } from 'src/app/reducers';
 import { UserService } from 'src/app/services/user.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { GeoService } from '../../services/geo.service';
+import { VideoPage } from '../video/video.page';
+
 
 @Component({
   selector: 'app-post-code',
@@ -28,11 +31,15 @@ export class PostCodePage implements OnInit {
   minYear: number;
 
   constructor(
-    private user: User,
+    private user: Observable<User>,
     private geoSvc: GeoService,
     private changeRef: ChangeDetectorRef,
-    private userService: UserService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private userSvc: UserService,
+    private store: Store<State>,
+    private navCtrl: NavController,
+    private utils: UtilsService,
+    private routerOutlet: IonRouterOutlet
   ) {
     this.maxYear = new Date().getFullYear();
     this.minYear = this.maxYear - 120;
@@ -46,6 +53,10 @@ export class PostCodePage implements OnInit {
   }
 
   async ngOnInit() {
+    this.user = this.store
+      .select((state) => state.user)
+      .pipe(map((u) => u.user));
+
     try {
       const currentPosition: GeolocationPosition = await this.geoSvc.getCurrentPosition();
       console.log(
@@ -65,14 +76,12 @@ export class PostCodePage implements OnInit {
       }
     } catch (err) {}
 
-    this.userService.fetchUser().subscribe((user) => {
-      this.user = { ...user };
-      console.log('u__', this.user);
+    this.user.subscribe((user) => {
       this.showBackground = !user || user.show_onboarding;
-      this.form.controls['birth-year'].setValue(this.user?.year);
-      this.form.controls['zip-code-1'].setValue(this.user?.postalcode1);
-      this.form.controls['zip-code-2'].setValue(this.user?.postalcode2);
-      this.form.controls['covidografia-code'].setValue(this.user?.patientToken);
+      this.form.controls['birth-year'].setValue(user.year);
+      this.form.controls['zip-code-1'].setValue(user.postalcode1);
+      this.form.controls['zip-code-2'].setValue(user.postalcode2);
+      this.form.controls['covidografia-code'].setValue(user.patientToken);
     });
 
     this.form = this.fb.group({
@@ -132,19 +141,28 @@ export class PostCodePage implements OnInit {
     }
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.submitted = true;
-    this.user.postalcode = this.form.value['zip-code-1'];
-    console.log('this.user.posr', this.user.postalcode);
-    //this.userSvc.updatePostalCode(this.user);
-    if (this.form.valid) {
-      //this._updateUserData(this.form.value);
-
-      if (this.user?.show_onboarding) {
-        //this.router.navigate(['/onboarding']);
-      } else {
-        //this.router.navigate(['/dashboard', 'status']);
-      }
-    }
+    this.user.pipe(
+      map(async (user) => {
+        user.postalcode = this.form.value['zip-code-1'];
+        if (this.form.valid) {
+          this.userSvc.updatePostalCode(user);
+          if (user.show_onboarding) {
+            this.navCtrl.navigateRoot('/home');
+            (
+              await this.utils.swipableModal(
+                VideoPage,
+                this.routerOutlet.nativeEl,
+                {},
+                ''
+              )
+            ).present();
+          } else {
+            this.navCtrl.navigateRoot('/home');
+          }
+        }
+      })
+    );
   }
 }
