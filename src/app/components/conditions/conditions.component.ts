@@ -20,9 +20,24 @@ export class ConditionsComponent implements OnInit {
     );
   }
 
+  decideIcon(condition: ICaseConditions): string {
+    switch (condition.summary_order) {
+      case 1:
+        return 'assets/img/illustrations/dashboard/heart.svg';
+      case 10:
+        return 'assets/img/illustrations/dashboard/user-red.svg';
+      case 20:
+        return 'assets/img/illustrations/dashboard/green.svg';
+      case 30:
+        return 'assets/img/illustrations/dashboard/green.svg';
+      default:
+        return 'assets/img/illustrations/dashboard/user-orange.svg';
+    }
+  }
+
   decideClass(condition: ICaseConditions): string {
     switch (condition.summary_order) {
-      case 6:
+      case 1:
         return 'noSymptomsCard';
       case 10:
         return 'suspiciousCard';

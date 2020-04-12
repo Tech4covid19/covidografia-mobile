@@ -31,20 +31,7 @@ export class LoginPage implements OnInit {
         ' The rest is ',
         JSON.stringify(result)
       );
-
-      this.nativeHttp
-        .post(
-          environment.base_api + '/login/facebook/token',
-          {
-            access_token: result.accessToken.token,
-          },
-          { Accept: '*/*', 'content-type': 'application/json' }
-        )
-        .then((response) => {
-          const token = response.data.token;
-          sessionStorage.setItem('token', token);
-          console.log('token after fbauth', token);
-        });
+      this.getUserToken(result.accessToken.token);
     } else {
       // Cancelled by user.
     }
@@ -64,13 +51,27 @@ export class LoginPage implements OnInit {
     ));
 
     if (result.accessToken) {
-      console.log(
-        `Facebook access token is ${result.accessToken.token}`,
-        ' The rest is ',
-        JSON.stringify(result)
-      );
+      console.log(`Facebook access token is ${result.accessToken.token}`);
+      this.getUserToken(result.accessToken.token);
     } else {
       // Not logged in.
     }
+  }
+
+  getUserToken(token: string) {
+    this.nativeHttp.setDataSerializer('json');
+    this.nativeHttp
+      .post(
+        environment.base_api + '/login/facebook/token',
+        {
+          access_token: token,
+        },
+        { 'Content-Type': 'application/json' }
+      )
+      .then((response) => {
+        const token = JSON.parse(response.data).token;
+        sessionStorage.setItem('token', token);
+      })
+      .catch((err) => console.log('err getting token', JSON.stringify(err)));
   }
 }

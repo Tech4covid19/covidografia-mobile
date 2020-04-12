@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
-import { IonRouterOutlet } from '@ionic/angular';
+import { IonRouterOutlet, ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { loadConfinements } from './../../actions/confinements.actions';
 import { loadUser } from './../../actions/user.actions';
 import { ICaseConfinements } from './../../interfaces/icase-confinements';
 import { PostCodePage } from './../post-code/post-code.page';
+import { VideoPage } from './../video/video.page';
 
 @Component({
   selector: 'app-home',
@@ -29,18 +30,19 @@ export class HomePage implements OnInit {
   numUtilizadores: number = 0;
   postalCode: number = 0;
   numSymptoms: number = 0;
+  user: Observable<User>;
   cases: Observable<Array<ICase>> = of([]);
   caseConfinements: Observable<Array<ICaseConfinements>> = of();
   caseConditions: Observable<Array<ICaseConditions>>;
 
   constructor(
     private userSvc: UserService,
-    private user: User,
     private caseConfinementsService: CaseConfinementsService,
     private caseConditionsService: CaseConditionsService,
     private utils: UtilsService,
     private routerOutlet: IonRouterOutlet,
-    private store: Store<State>
+    private store: Store<State>,
+    private modalController: ModalController
   ) {}
 
   async ngOnInit() {
@@ -52,6 +54,10 @@ export class HomePage implements OnInit {
       .select((state) => state.confinements)
       .pipe(map((c) => c.confinements));
 
+    this.user = this.store
+      .select((state) => state.user)
+      .pipe(map((c) => c.user));
+
     // Set token for testing
     // https://staging.api.covidografia.pt/login/facebook
     sessionStorage.setItem(
@@ -61,39 +67,50 @@ export class HomePage implements OnInit {
     this.setCurrentUser();
   }
 
+  async ionViewWillEnter() {
+    const showVideo = await getStorage('hideVideo');
+    if (!showVideo) {
+      (
+        await this.utils.swipableModal(
+          VideoPage,
+          this.routerOutlet.nativeEl,
+          {},
+          ''
+        )
+      ).present();
+    }
+  }
+
   async setCurrentUser() {
     //TODO: This must be protected by an Angular Guard
     const user = await getStorage('user');
     this.store.dispatch(loadUser(user));
 
     this.userSvc.fetchUser().subscribe((user) => {
-      console.log('got user', user);
-      this.user = user;
-      setStorage('user', this.user);
       this.store.dispatch(loadUser(user));
-      this.fetchData();
+      setStorage('user', this.user);
+      this.fetchData(user);
     });
   }
 
-  async fetchData() {
+  async fetchData(user) {
     this.caseConfinementsService
-      .fetchCaseConfinementsByPostalCode(this.user.postalcode)
+      .fetchCaseConfinementsByPostalCode(user.postalcode)
       .subscribe((c) => {
-        console.log('c________ ', c);
         this.store.dispatch(
           loadConfinements({
-            zipcode: this.user.postalcode,
+            zipcode: user.postalcode,
             confinements: c,
           })
         );
       });
 
     this.caseConditionsService
-      .fetchCaseConditionsByPostalCode(this.user.postalcode)
+      .fetchCaseConditionsByPostalCode(user.postalcode)
       .subscribe((c) => {
         this.store.dispatch(
           loadConditions({
-            zipcode: this.user.postalcode,
+            zipcode: user.postalcode,
             conditions: c,
           })
         );
@@ -101,7 +118,7 @@ export class HomePage implements OnInit {
   }
 
   async doRefresh(event) {
-    await this.fetchData();
+    await this.fetchData(await this.user.toPromise());
     //event.target.complete(); remove the timeout and uncoment this for faster but less animated
     setTimeout(() => {
       event.target.complete();
@@ -112,20 +129,27 @@ export class HomePage implements OnInit {
     return numConditions.reduce((total, d) => total + d.status, 0);
   }
 
-  getPostalCode(caseConditions: Array<ICaseConditions>): string {
-    if (caseConditions == null || caseConditions.length < 1) return '?';
-    return caseConditions[0].postalcode.slice(0, 4);
-  }
-
   async openPostalCode() {
-    (
-      await this.utils.swipableModal(
-        PostCodePage,
-        this.routerOutlet.nativeEl,
-        {},
-        ''
-      )
-    ).present();
+    const modal = await this.utils.swipableModal(
+      PostCodePage,
+      this.routerOutlet.nativeEl,
+      {},
+      ''
+    );
+    modal.present();
+    modal.onDidDismiss().then(async () => {
+      const showVideo = await getStorage('hideVideo');
+      if (!showVideo) {
+        (
+          await this.utils.swipableModal(
+            VideoPage,
+            this.routerOutlet.nativeEl,
+            {},
+            ''
+          )
+        ).present();
+      }
+    });
   }
 
   async share() {
@@ -141,7 +165,6 @@ export class HomePage implements OnInit {
       });
     } catch (err) {
       this.utils.presentToast('Erro ao tentar partilhar', 2000, 'bottom', 'Ok');
-      console.log('sharing is not possible', err);
     }
   }
 }

@@ -4,6 +4,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
-</ion-content>
+<ion-content> </ion-content>
+<ion-footer>
+  <ion-item>
+    <ion-label>
+      Não mostrar novamente
+    </ion-label>
+    <ion-toggle [(ngModel)]="toggle"></ion-toggle>
+    <ion-button color="medium" size="small" icon="null" (click)="close()">
+      Fechar
+    </ion-button>
+  </ion-item>
+</ion-footer>

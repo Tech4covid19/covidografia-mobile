@@ -72,7 +72,7 @@
     </ion-row>
 
     <ion-row class="ion-align-items-center">
-      <ion-col size="9">
+      <ion-col *ngIf="caseConditions | async as caseConditions" size="9">
         <ion-text color="dark">
           <strong
             >{{'ESTADO NA MINHA ÁREA' | translate | titlecase }}</strong
@@ -81,26 +81,31 @@
         <ion-text style="font-size: 0.8em;" color="medium">
           {{('BASEADO NA INFORMAÇÃO DE ' | translate | titlecase)}}
         </ion-text>
-        <ion-text
-          style="font-size: 0.8em;"
-          color="medium"
-          *ngIf="caseConditions | async as caseConditions"
-        >
-          {{numConditions(caseConditions)}} {{(' UTILIZADOR' | translate |
-          titlecase) + (numConditions(caseConditions) != 1 ? ('ES' | translate |
-          lowercase) : '')}}
+        <ion-text style="font-size: 0.8em;" color="medium">
+          <span *ngIf="numConditions(caseConditions) > -1">
+            {{numConditions(caseConditions)}}
+          </span>
+          <ion-spinner
+            style="font-size: 0.8em;"
+            *ngIf="numConditions(caseConditions) < 0"
+          ></ion-spinner>
+          {{(' UTILIZADOR' | translate | titlecase) +
+          (numConditions(caseConditions) != 1 ? ('ES' | translate | lowercase) :
+          '')}}
         </ion-text>
-        <ion-spinner *ngIf="!(caseConditions | async)"></ion-spinner>
       </ion-col>
       <ion-col size="3">
         <ion-button
-          *ngIf="caseConditions | async as caseConditions"
+          *ngIf="user | async as user"
           expand="full"
           fill="clear"
           (click)="openPostalCode()"
         >
           <ion-icon slot="start" name="pin"></ion-icon>
-          {{getPostalCode(caseConditions)}}
+          <ion-spinner *ngIf="user?.postalcode?.length < 1"></ion-spinner>
+          <span *ngIf="user?.postalcode?.length > 0">
+            {{ user?.postalcode?.slice(0, 4)}}
+          </span>
         </ion-button>
       </ion-col>
     </ion-row>

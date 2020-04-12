@@ -1,24 +1,30 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { GeolocationPosition } from '@capacitor/core';
-import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { IonRouterOutlet, NavController } from '@ionic/angular';
+import {
+  IonRouterOutlet,
+  NavController,
+  ModalController,
+} from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/entities/user';
 import { State } from 'src/app/reducers';
+import { GeoService } from 'src/app/services/geo.service';
 import { UserService } from 'src/app/services/user.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { GeoService } from '../../services/geo.service';
-import { VideoPage } from '../video/video.page';
-
+import { VideoPage } from './../video/video.page';
 
 @Component({
   selector: 'app-post-code',
   templateUrl: './post-code.page.html',
   styleUrls: ['./post-code.page.scss'],
-  providers: [NativeGeocoder],
+  providers: [IonRouterOutlet],
 })
 export class PostCodePage implements OnInit {
   form: FormGroup;
@@ -31,7 +37,7 @@ export class PostCodePage implements OnInit {
   minYear: number;
 
   constructor(
-    private user: Observable<User>,
+    private user: User,
     private geoSvc: GeoService,
     private changeRef: ChangeDetectorRef,
     public fb: FormBuilder,
@@ -39,7 +45,7 @@ export class PostCodePage implements OnInit {
     private store: Store<State>,
     private navCtrl: NavController,
     private utils: UtilsService,
-    private routerOutlet: IonRouterOutlet
+    private modalController: ModalController
   ) {
     this.maxYear = new Date().getFullYear();
     this.minYear = this.maxYear - 120;
@@ -53,9 +59,10 @@ export class PostCodePage implements OnInit {
   }
 
   async ngOnInit() {
-    this.user = this.store
+    this.user = await this.store
       .select((state) => state.user)
-      .pipe(map((u) => u.user));
+      .pipe(map((u) => u.user))
+      .toPromise();
 
     try {
       const currentPosition: GeolocationPosition = await this.geoSvc.getCurrentPosition();
@@ -76,13 +83,11 @@ export class PostCodePage implements OnInit {
       }
     } catch (err) {}
 
-    this.user.subscribe((user) => {
-      this.showBackground = !user || user.show_onboarding;
-      this.form.controls['birth-year'].setValue(user.year);
-      this.form.controls['zip-code-1'].setValue(user.postalcode1);
-      this.form.controls['zip-code-2'].setValue(user.postalcode2);
-      this.form.controls['covidografia-code'].setValue(user.patientToken);
-    });
+    this.showBackground = !this.user || this.user.show_onboarding;
+    this.form.controls['birth-year'].setValue(this.user.year);
+    this.form.controls['zip-code-1'].setValue(this.user.postalcode1);
+    this.form.controls['zip-code-2'].setValue(this.user.postalcode2);
+    this.form.controls['covidografia-code'].setValue(this.user.patientToken);
 
     this.form = this.fb.group({
       'birth-year': [
@@ -143,26 +148,33 @@ export class PostCodePage implements OnInit {
 
   async onSubmit() {
     this.submitted = true;
-    this.user.pipe(
-      map(async (user) => {
-        user.postalcode = this.form.value['zip-code-1'];
-        if (this.form.valid) {
-          this.userSvc.updatePostalCode(user);
-          if (user.show_onboarding) {
-            this.navCtrl.navigateRoot('/home');
-            (
-              await this.utils.swipableModal(
-                VideoPage,
-                this.routerOutlet.nativeEl,
-                {},
-                ''
-              )
-            ).present();
-          } else {
-            this.navCtrl.navigateRoot('/home');
-          }
-        }
-      })
+    console.log(
+      'this.form.value[zip-code-1]',
+      this.form.value['zip-code-1'],
+      this.form.value['zip-code-2'],
+      this.form.valid
     );
+    this.user.postalcode =
+      this.form.value['zip-code-1'] + '-' + this.form.value['zip-code-2'];
+    if (this.form.valid) {
+      this.userSvc
+        .updatePostalCode(this.user)
+        .then(async (resp) => {
+          console.log('yay', resp, this.user.show_onboarding);
+          this.utils.presentToast('Dados registados', 1000, 'top', '');
+          this.modalController.dismiss();
+          this.navCtrl.navigateRoot('home');
+        })
+        .catch((err) => {
+          this.utils.presentToast(
+            'Houve um problema a registar estes dados. Tente novamente mais tarde',
+            2500,
+            'top',
+            'Ok'
+          );
+          this.navCtrl.navigateRoot('/home');
+          console.log('err', err);
+        });
+    }
   }
 }

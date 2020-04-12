@@ -1,28 +1,24 @@
-import { HTTP } from '@ionic-native/http/ngx';
-import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { HTTP } from '@ionic-native/http/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import {
-  IonicModule,
-  IonicRouteStrategy,
-  mdTransitionAnimation,
-} from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, mdTransitionAnimation } from '@ionic/angular';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { User } from './entities/user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
-import { EffectsModule } from '@ngrx/effects';
-import { ConditionsEffects } from './effects/conditions.effects';
+import { metaReducers, reducers } from './reducers';
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,11 +53,13 @@ import { ConditionsEffects } from './effects/conditions.effects';
     StatusBar,
     SplashScreen,
     User,
+    UtilsService,
     NativeGeocoder,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     HTTP,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
+  
 })
 export class AppModule {}
 

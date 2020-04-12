@@ -12,8 +12,8 @@ import { PostCodePage } from './post-code.page';
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    PostCodePageRoutingModule,
     TranslateModule,
+    PostCodePageRoutingModule,
   ],
   declarations: [PostCodePage],
 })
