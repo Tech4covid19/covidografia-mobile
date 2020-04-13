@@ -18,7 +18,7 @@
   </ion-refresher>
 
   <ion-grid>
-    <ion-row class="ion-no-padding ion-no-margin">
+    <ion-row *ngIf="user | async as user" class="ion-no-padding ion-no-margin">
       <ion-col class="ion-no-padding ion-text-start" size="6">
         <ion-button
           size="large"
@@ -28,7 +28,7 @@
         >
           <ion-icon
             slot="start"
-            color="success"
+            [style]="'color: ' + decideColor(1, user)"
             name="radio-button-on"
           ></ion-icon>
           <ion-text color="medium">
@@ -45,7 +45,7 @@
         >
           <ion-icon
             slot="start"
-            color="success"
+            [style]="'color: ' + decideColor(2, user)"
             name="radio-button-on"
           ></ion-icon>
           <ion-text color="medium">

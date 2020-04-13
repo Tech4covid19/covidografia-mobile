@@ -165,4 +165,12 @@ export class HomePage implements OnInit {
       this.utils.presentToast('Erro ao tentar partilhar', 2000, 'bottom', 'Ok');
     }
   }
+
+  decideColor(buttonId: number, user: any): string {
+    if (buttonId === 1) {
+      return user.latest_status.confinement_state !== 1 ? '#eb445a' : '#2dd36f';
+    } else {
+      return user.latest_status.status == 2 ? '#eb445a' : '#2dd36f';
+    }
+  }
 }

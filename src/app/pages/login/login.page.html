@@ -1,30 +1,27 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <ion-button expand="full" (click)="facebookLogin()">
-    Facebook login
-  </ion-button>
-
-  <ion-button size="small" expand="full" (click)="logoutFacebook()">
-    logoutFacebook
-  </ion-button>
-
-  <ion-button size="small" expand="full" (click)="getCurrentAccessToken()">
-    getCurrentAccessToken
-  </ion-button>
-
-  <ion-input [(ngModel)]="webToken">Web token</ion-input>
-  <ion-button expand="full" (click)="webTestLogin()">
-    Submit web token
+<ion-content fullscreen="true" scroll-y="false">
+  <img src="assets/img/illustrations/login/background-mobile.svg" />
+  <ion-input
+    class="ion-text-center"
+    [(ngModel)]="webToken"
+    placeholder="Web token"
+  ></ion-input>
+  <ion-button size="small" fill="clear" expand="full" (click)="webTestLogin()">
+    Manually set web token
   </ion-button>
 </ion-content>
 <ion-footer>
   <ion-button
+    shape="round"
     expand="full"
+    class="ion-no-padding ion-no-margin"
+    (click)="facebookLogin()"
+  >
+    <ion-icon slot="start" name="logo-facebook"></ion-icon>
+    Facebook login
+  </ion-button>
+  <ion-button
+    expand="full"
+    fill="clear"
     class="ion-no-padding ion-no-margin"
     (click)="testCleanAll()"
   >
