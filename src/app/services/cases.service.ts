@@ -16,7 +16,9 @@ export class CasesService {
     private webHttp: HttpClient,
     private nativeHttp: HTTP,
     private platform: Platform
-  ) {}
+  ) {
+    nativeHttp.setDataSerializer('json');
+  }
 
   fetchCases(): Observable<Array<ICase>> {
     if (this.platform.is('ios') || this.platform.is('android')) {
@@ -24,7 +26,7 @@ export class CasesService {
         switchMap((token) => {
           return defer(() =>
             this.nativeHttp.get(
-              environment.base_api + '/user',
+              environment.base_api + '/cases/all',
               {},
               {
                 Authorization: 'Bearer ' + token.token,
@@ -49,27 +51,31 @@ export class CasesService {
     }
   }
 
-  addCase(_case: ICase): Observable<any> {
+  addCase(_case: ICase): Promise<any> {
     if (this.platform.is('ios') || this.platform.is('android')) {
-      return from(getStorage('token')).pipe(
-        switchMap((token) => {
-          return defer(() =>
-            this.nativeHttp.post(environment.base_api + '/user', _case, {
-              Authorization: 'Bearer ' + token.token,
-            })
-          ).pipe(map((response) => JSON.parse(response.data)));
-        })
-      );
+      return from(getStorage('token'))
+        .pipe(
+          switchMap((token) => {
+            return defer(() =>
+              this.nativeHttp.post(environment.base_api + '/case', _case, {
+                Authorization: 'Bearer ' + token.token,
+              })
+            ).pipe(map((response) => JSON.parse(response.data)));
+          })
+        )
+        .toPromise();
     } else {
-      return from(getStorage('token')).pipe(
-        switchMap((token) => {
-          return this.webHttp.post(environment.base_api + '/case', _case, {
-            headers: new HttpHeaders({
-              Authorization: 'Bearer ' + token.token,
-            }),
-          });
-        })
-      );
+      return from(getStorage('token'))
+        .pipe(
+          switchMap((token) => {
+            return this.webHttp.post(environment.base_api + '/case', _case, {
+              headers: new HttpHeaders({
+                Authorization: 'Bearer ' + token.token,
+              }),
+            });
+          })
+        )
+        .toPromise();
     }
   }
 }

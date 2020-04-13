@@ -9,11 +9,11 @@
     Facebook login
   </ion-button>
 
-  <ion-button expand="full" (click)="logoutFacebook()">
+  <ion-button size="small" expand="full" (click)="logoutFacebook()">
     logoutFacebook
   </ion-button>
 
-  <ion-button expand="full" (click)="getCurrentAccessToken()">
+  <ion-button size="small" expand="full" (click)="getCurrentAccessToken()">
     getCurrentAccessToken
   </ion-button>
 
@@ -21,8 +21,13 @@
   <ion-button expand="full" (click)="webTestLogin()">
     Submit web token
   </ion-button>
-
-  <pre>
-    {{webToken | json}}
-  </pre>
 </ion-content>
+<ion-footer>
+  <ion-button
+    expand="full"
+    class="ion-no-padding ion-no-margin"
+    (click)="testCleanAll()"
+  >
+    Test clean all
+  </ion-button>
+</ion-footer>

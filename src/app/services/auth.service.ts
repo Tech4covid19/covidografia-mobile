@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { HTTP } from '@ionic-native/http/ngx';
+import { NavController } from '@ionic/angular';
 import { FacebookLoginResponse } from '@rdlabo/capacitor-facebook-login';
 import * as moment from 'moment';
-import { defer } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { setStorage } from './storage.service';
 
@@ -12,19 +11,17 @@ import { setStorage } from './storage.service';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private nativeHttp: HTTP) {}
+  constructor(private nativeHttp: HTTP, private navCtrl: NavController) {}
 
-  async getUserToken(token: string) {
+  getUserToken(token: string): Promise<any> {
     this.nativeHttp.setDataSerializer('json');
-    return defer(() =>
-      this.nativeHttp.post(
-        environment.base_api + '/login/facebook/token',
-        {
-          access_token: token,
-        },
-        { 'Content-Type': 'application/json' }
-      )
-    ).pipe(map((response) => JSON.parse(response.data).token));
+    return this.nativeHttp.post(
+      environment.base_api + '/login/facebook/token',
+      {
+        access_token: token,
+      },
+      { 'Content-Type': 'application/json' }
+    );
   }
 
   async getCurrentFacebookAccessToken() {
@@ -57,7 +54,11 @@ export class AuthService {
         JSON.stringify(result)
       );
       const userToken = await this.getUserToken(result.accessToken.token);
-      setStorage('token', { token: userToken, validity: moment() });
+      await setStorage('token', {
+        token: JSON.parse(userToken.data).token,
+        validity: moment(),
+      });
+      this.navCtrl.navigateRoot('home');
     } else {
       // Cancelled by user.
     }

@@ -1,24 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeolocationPosition } from '@capacitor/core';
-import {
-  IonRouterOutlet,
-  NavController,
-  ModalController,
-} from '@ionic/angular';
+import { IonRouterOutlet, ModalController, NavController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
+import { loadConditions } from 'src/app/actions/conditions.actions';
+import { loadConfinements } from 'src/app/actions/confinements.actions';
 import { User } from 'src/app/entities/user';
 import { State } from 'src/app/reducers';
 import { GeoService } from 'src/app/services/geo.service';
 import { UserService } from 'src/app/services/user.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { VideoPage } from './../video/video.page';
+import { CaseConditionsService } from './../../services/case-conditions.service';
+import { CaseConfinementsService } from './../../services/case-confinements.service';
 
 @Component({
   selector: 'app-post-code',
@@ -28,7 +22,7 @@ import { VideoPage } from './../video/video.page';
 })
 export class PostCodePage implements OnInit {
   form: FormGroup;
-  postalCode: string;
+
   submitted = false;
   opened = true;
   closing = false;
@@ -45,7 +39,9 @@ export class PostCodePage implements OnInit {
     private store: Store<State>,
     private navCtrl: NavController,
     private utils: UtilsService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private caseConditionsService: CaseConditionsService,
+    private caseConfinementsService: CaseConfinementsService
   ) {
     this.maxYear = new Date().getFullYear();
     this.minYear = this.maxYear - 120;
@@ -67,7 +63,7 @@ export class PostCodePage implements OnInit {
     try {
       const currentPosition: GeolocationPosition = await this.geoSvc.getCurrentPosition();
       console.log(
-        'curre',
+        '___current location',
         currentPosition,
         currentPosition.coords.latitude,
         currentPosition.coords.longitude
@@ -76,12 +72,15 @@ export class PostCodePage implements OnInit {
         currentPosition.coords.latitude,
         currentPosition.coords.longitude
       );
+      console.log('___postalCode', c);
       if (c.length > 0) {
-        this.postalCode = c[0].postalCode;
-        this.form.controls['zip-code-1'].setValue(c[0].postalCode);
+        const postalCode = c[0].postalCode.split('-');
+        this.form.controls['zip-code-1'].setValue(postalCode[0]);
         this.changeRef.detectChanges();
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log('___locationErr', err);
+    }
 
     this.showBackground = !this.user || this.user.show_onboarding;
     this.form.controls['birth-year'].setValue(this.user.year);
@@ -160,8 +159,7 @@ export class PostCodePage implements OnInit {
       this.userSvc
         .updatePostalCode(this.user)
         .then(async (resp) => {
-          console.log('yay', resp, this.user.show_onboarding);
-          this.utils.presentToast('Dados registados', 1000, 'top', '');
+          this.fetchData(this.user);
           this.modalController.dismiss();
           this.navCtrl.navigateRoot('home');
         })
@@ -176,5 +174,29 @@ export class PostCodePage implements OnInit {
           console.log('err', err);
         });
     }
+  }
+
+  async fetchData(user) {
+    this.caseConfinementsService
+      .fetchCaseConfinementsByPostalCode(user.postalcode)
+      .subscribe((c) => {
+        this.store.dispatch(
+          loadConfinements({
+            zipcode: user.postalcode,
+            confinements: c,
+          })
+        );
+      });
+
+    this.caseConditionsService
+      .fetchCaseConditionsByPostalCode(user.postalcode)
+      .subscribe((c) => {
+        this.store.dispatch(
+          loadConditions({
+            zipcode: user.postalcode,
+            conditions: c,
+          })
+        );
+      });
   }
 }

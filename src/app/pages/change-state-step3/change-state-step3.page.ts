@@ -1,19 +1,17 @@
-import { UserService } from 'src/app/services/user.service';
-import { ICase } from './../../interfaces/ICase';
-import { CasesService } from './../../services/cases.service';
 import { Component, OnInit } from '@angular/core';
-import { IonRouterOutlet, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/entities/user';
 import { IStep } from 'src/app/interfaces/IStep';
-import { ISymptom } from 'src/app/interfaces/ISymptom';
+import { State } from 'src/app/reducers';
 import { NavParamsService } from 'src/app/services/nav-params.service';
-import { ICondition } from './../../interfaces/icondition';
+import { UserService } from 'src/app/services/user.service';
+import { ICase } from './../../interfaces/ICase';
+import { CasesService } from './../../services/cases.service';
 import { ConfinementStatesService } from './../../services/confinement-states.service';
 import { UtilsService } from './../../services/utils.service';
-import { VideoPage } from './../video/video.page';
-import { getStorage, setStorage } from 'src/app/services/storage.service';
-import { IGeo } from 'src/app/interfaces/IGeo';
 
 export interface IConfinementStateWithChecked {
   id: number | string;
@@ -35,20 +33,22 @@ export class ChangeStateStep3Page implements OnInit {
   ];
   symptoms: Array<number>;
   conditions: Array<number>;
-
+  user: Observable<User>;
   constructor(
     private confinementStatesSvc: ConfinementStatesService,
     private caseSvc: CasesService,
     private navCtrl: NavController,
     private navParams: NavParamsService,
     private utils: UtilsService,
-    private routerOutlet: IonRouterOutlet,
-    private user: User,
-    private userSvc: UserService
+    private userSvc: UserService,
+    private store: Store<State>
   ) {}
 
   async ngOnInit() {
-    this.user = await getStorage('user');
+    this.user = this.store
+      .select((state) => state.user)
+      .pipe(map((c) => c.user));
+
     this.confinementStates = await this.confinementStatesSvc
       .fetchConfinementStates()
       .pipe(map((v) => v.map((vv) => Object.assign(vv, { isChecked: false }))))
@@ -68,17 +68,9 @@ export class ChangeStateStep3Page implements OnInit {
     });
   }
 
-  async goTo(page: string) {
-    this.addCase();
+  async goTo(page: string, user) {
+    await this.addCase(user);
     this.navCtrl.navigateRoot(page);
-    (
-      await this.utils.swipableModal(
-        VideoPage,
-        this.routerOutlet.nativeEl,
-        {},
-        ''
-      )
-    ).present();
   }
 
   canGoFurther(): boolean {
@@ -89,11 +81,11 @@ export class ChangeStateStep3Page implements OnInit {
     );
   }
 
-  async addCase() {
+  async addCase(user) {
     const _case: ICase = {
       id: 0,
-      postalCode: this.user.postalcode,
-      geo: { lat: +this.user.latitude, lon: +this.user.longitude },
+      postalCode: user.postalcode,
+      geo: { lat: +user.latitude, lon: +user.longitude },
       condition: this.conditions[0],
       symptoms: this.symptoms,
       confinementState: +this.confinementStates
@@ -101,7 +93,36 @@ export class ChangeStateStep3Page implements OnInit {
         .map((cs) => cs.id)[0],
       timestamp: Date.now().toString(),
     };
-    this.caseSvc.addCase(_case);
-    this.userSvc.updateOnboarding(this.user);
+    this.userSvc.updateOnboarding(user).then(
+      (success) => {
+        console.log('____user submit success', JSON.stringify(success));
+        this.utils.presentToast(
+          'Utilizador onborading atualizado',
+          2000,
+          'top',
+          'Ok'
+        );
+      },
+      (err) => {
+        console.log('____user submit err', JSON.stringify(err));
+        this.utils.presentToast(
+          'Erro ao atualizar onboarding',
+          2000,
+          'top',
+          'Ok'
+        );
+      }
+    );
+
+    this.caseSvc.addCase(_case).then(
+      (success) => {
+        console.log('____case submit success', JSON.stringify(success));
+        this.utils.presentToast('Adicionado caso', 2000, 'top', 'Ok');
+      },
+      (err) => {
+        console.log('____case submit err', JSON.stringify(err));
+        this.utils.presentToast('Erro ao adicionar caso', 2000, 'top', 'Ok');
+      }
+    );
   }
 }

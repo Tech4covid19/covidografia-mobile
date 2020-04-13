@@ -20,7 +20,9 @@ export class UserService {
     private nativeHttp: HTTP,
     private platform: Platform,
     private store: Store<State>
-  ) {}
+  ) {
+    nativeHttp.setDataSerializer('json');
+  }
 
   fetchUser(): Observable<User> {
     if (this.platform.is('ios') || this.platform.is('android')) {

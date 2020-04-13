@@ -18,7 +18,8 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { User } from './entities/user';
-import { metaReducers, reducers } from './reducers';
+import { reducers } from './reducers';
+import { clearState } from './reducers/clearState.metareducer';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,7 +39,7 @@ import { metaReducers, reducers } from './reducers';
     ReactiveFormsModule,
     FormsModule,
     StoreModule.forRoot(reducers, {
-      metaReducers,
+      metaReducers: [clearState],
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true,
@@ -59,7 +60,6 @@ import { metaReducers, reducers } from './reducers';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
-  
 })
 export class AppModule {}
 

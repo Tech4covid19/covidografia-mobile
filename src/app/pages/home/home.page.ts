@@ -19,7 +19,6 @@ import { loadUser } from './../../actions/user.actions';
 import { ICaseConfinements } from './../../interfaces/icase-confinements';
 import { PostCodePage } from './../post-code/post-code.page';
 import { VideoPage } from './../video/video.page';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -113,7 +112,11 @@ export class HomePage implements OnInit {
   }
 
   async doRefresh(event) {
-    await this.fetchData(await this.user.toPromise());
+    this.userSvc.fetchUser().subscribe((user) => {
+      this.store.dispatch(loadUser(user));
+      setStorage('user', this.user);
+      this.fetchData(user);
+    });
     //event.target.complete(); remove the timeout and uncoment this for faster but less animated
     setTimeout(() => {
       event.target.complete();

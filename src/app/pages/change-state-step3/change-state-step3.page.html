@@ -48,8 +48,9 @@
 </ion-content>
 <ion-footer *ngIf="confinementStates && confinementStates.length > 0">
   <ion-button
+    *ngIf="user | async as user"
     [disabled]="canGoFurther()"
-    (click)="goTo('/home')"
+    (click)="goTo('/home', user)"
     color="orange"
     expand="full"
     class="ion-no-padding ion-no-margin"
@@ -57,6 +58,5 @@
     <ion-text style="color: white;">
       {{'SUBMETER' | translate | titlecase }}
     </ion-text>
-    
   </ion-button>
 </ion-footer>

@@ -1,8 +1,16 @@
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { setStorage, getStorage } from 'src/app/services/storage.service';
+import { State } from 'src/app/reducers';
+import { Logout } from 'src/app/reducers/clearState.metareducer';
+import {
+  getStorage,
+  removeStorage,
+  setStorage,
+} from 'src/app/services/storage.service';
 import { AuthService } from './../../services/auth.service';
+import { UtilsService } from './../../services/utils.service';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +19,17 @@ import { AuthService } from './../../services/auth.service';
 })
 export class LoginPage implements OnInit {
   webToken: string;
-  constructor(private authSvc: AuthService, private navCtrl: NavController) {}
+  constructor(
+    private authSvc: AuthService,
+    private navCtrl: NavController,
+    private store: Store<State>,
+    private utils: UtilsService,
+    private changeRef: ChangeDetectorRef
+  ) {}
 
   async ngOnInit() {
     const token = await getStorage('token');
-    console.log('_token', token);
-    this.webToken = token.token;
+    this.webToken = token ? token.token : '';
   }
 
   async facebookLogin() {
@@ -32,11 +45,21 @@ export class LoginPage implements OnInit {
   }
 
   async webTestLogin() {
-    console.log(this.webToken);
-    setStorage('token', { token: this.webToken, fetchedAt: moment() }).then(
-      () => {
-        this.navCtrl.navigateForward('home');
-      }
-    );
+    await setStorage('token', { token: this.webToken, fetchedAt: moment() });
+    this.navCtrl.navigateForward('home');
+  }
+
+  async testCleanAll() {
+    await removeStorage('user');
+    await removeStorage('token');
+    await removeStorage('hideVideo');
+    await removeStorage('showIntro');
+    this.logoutFacebook();
+    this.store.dispatch(new Logout());
+    this.utils.presentToast('All clean for testing', 1000, 'top', 'Cool');
+    const token = await getStorage('token');
+    console.log('_token', token);
+    this.webToken = token ? token.token : '';
+    this.changeRef.detectChanges();
   }
 }

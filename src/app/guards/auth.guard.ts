@@ -42,7 +42,10 @@ export class AuthGuard implements CanActivate {
               this.navCtrl.navigateRoot('login');
               resolve(true);
             } else {
-              setStorage('token', { token: userToken, validity: moment() });
+              setStorage('token', {
+                token: JSON.parse(userToken.data).token,
+                validity: moment(),
+              });
               return resolve(true);
             }
           }
