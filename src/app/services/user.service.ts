@@ -25,7 +25,7 @@ export class UserService {
   }
 
   fetchUser(): Observable<User> {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return from(getStorage('token')).pipe(
         switchMap((token) => {
           console.log('VALLEJO_token', JSON.stringify(token.token));
@@ -57,7 +57,7 @@ export class UserService {
   async updateOnboarding(user: User) {
     this.store.dispatch(loadUser(user));
     const token = (await getStorage('token')).token;
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return defer(() =>
         this.nativeHttp.put(
           environment.base_api + '/user',
@@ -85,7 +85,7 @@ export class UserService {
   async updatePostalCode(user: User) {
     this.store.dispatch(loadUser(user));
     const token = (await getStorage('token')).token;
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return defer(() =>
         this.nativeHttp.put(
           environment.base_api + '/user',

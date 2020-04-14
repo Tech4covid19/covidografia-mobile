@@ -19,7 +19,7 @@ export class VideosService {
   ) {}
 
   fetchVideos(): Observable<IVideo> {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return from(getStorage('token')).pipe(
         switchMap((token) => {
           return defer(() =>

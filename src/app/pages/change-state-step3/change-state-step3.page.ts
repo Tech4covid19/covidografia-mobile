@@ -99,7 +99,7 @@ export class ChangeStateStep3Page implements OnInit {
         this.utils.presentToast(
           'Utilizador onborading atualizado',
           2000,
-          'top',
+          'bottom',
           'Ok'
         );
       },
@@ -108,7 +108,7 @@ export class ChangeStateStep3Page implements OnInit {
         this.utils.presentToast(
           'Erro ao atualizar onboarding',
           2000,
-          'top',
+          'bottom',
           'Ok'
         );
       }
@@ -117,11 +117,11 @@ export class ChangeStateStep3Page implements OnInit {
     this.caseSvc.addCase(_case).then(
       (success) => {
         console.log('____case submit success', JSON.stringify(success));
-        this.utils.presentToast('Adicionado caso', 2000, 'top', 'Ok');
+        this.utils.presentToast('Adicionado caso', 2000, 'bottom', 'Ok');
       },
       (err) => {
         console.log('____case submit err', JSON.stringify(err));
-        this.utils.presentToast('Erro ao adicionar caso', 2000, 'top', 'Ok');
+        this.utils.presentToast('Erro ao adicionar caso', 2000, 'bottom', 'Ok');
       }
     );
   }

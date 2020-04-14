@@ -82,7 +82,7 @@ export class HomePage implements OnInit {
 
     this.userSvc.fetchUser().subscribe((user) => {
       this.store.dispatch(loadUser(user));
-      setStorage('user', this.user);
+      setStorage('user', user);
       this.fetchData(user);
     });
   }
@@ -114,7 +114,7 @@ export class HomePage implements OnInit {
   async doRefresh(event) {
     this.userSvc.fetchUser().subscribe((user) => {
       this.store.dispatch(loadUser(user));
-      setStorage('user', this.user);
+      setStorage('user', user);
       this.fetchData(user);
     });
     //event.target.complete(); remove the timeout and uncoment this for faster but less animated

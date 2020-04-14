@@ -13,7 +13,7 @@
     "devandroid": "ionic capacitor run android -l --address=0.0.0.0",
     "devios": "ionic capacitor run ios --livereload --external",
     "android": "ionic build --prod && npx cap sync android && npx cap open android",
-    "ios": "rm -r -f www && ionic build --prod && npx cap sync ios && npx cap open ios",
+    "ios": "ionic build --prod && npx cap sync ios && npx cap open ios",
     "resources": "cordova-res --skip-config --copy"
   },
   "private": true,

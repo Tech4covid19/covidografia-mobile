@@ -56,7 +56,7 @@ export class LoginPage implements OnInit {
     await removeStorage('showIntro');
     this.logoutFacebook();
     this.store.dispatch(new Logout());
-    this.utils.presentToast('All clean for testing', 1000, 'top', 'Cool');
+    this.utils.presentToast('All clean for testing', 1000, 'bottom', 'Cool');
     const token = await getStorage('token');
     console.log('_token', token);
     this.webToken = token ? token.token : '';

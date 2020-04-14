@@ -21,7 +21,7 @@ export class CasesService {
   }
 
   fetchCases(): Observable<Array<ICase>> {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return from(getStorage('token')).pipe(
         switchMap((token) => {
           return defer(() =>
@@ -52,7 +52,7 @@ export class CasesService {
   }
 
   addCase(_case: ICase): Promise<any> {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if(this.platform.is('capacitor')) {
       return from(getStorage('token'))
         .pipe(
           switchMap((token) => {
