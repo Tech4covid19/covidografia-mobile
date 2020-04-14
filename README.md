@@ -30,18 +30,24 @@ For the web
 $ ionic build --prod
 ```
 
-For Android
+For Android run the following commando and hit play on Android Studio
 ```sh
 $ npm run android
 ```
 
-For iOS
+For iOS run the following commando and hit play on XCode
 ```sh
 $ npm run ios
 ```
-
 # Resources
+Install this package globally
+```sh
 npm install -g cordova-res --unsafe-perm
+```
+Then inside project's root run:
+```sh
 cordova-res --skip-config --copy 
+```
+Follow the specs at: <br>
 https://github.com/ionic-team/cordova-res#capacitor
-https://app.flycricket.com/app/743cd34b784d4c7a90f90c39952af8e0/screenshots
+
