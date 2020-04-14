@@ -3,10 +3,12 @@ import { NavController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { loadUser } from 'src/app/actions/user.actions';
 import { User } from 'src/app/entities/user';
 import { IStep } from 'src/app/interfaces/IStep';
 import { State } from 'src/app/reducers';
 import { NavParamsService } from 'src/app/services/nav-params.service';
+import { setStorage } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { ICase } from './../../interfaces/ICase';
 import { CasesService } from './../../services/cases.service';
@@ -114,15 +116,29 @@ export class ChangeStateStep3Page implements OnInit {
       }
     );
 
-    this.caseSvc.addCase(_case).then(
-      (success) => {
-        console.log('____case submit success', JSON.stringify(success));
-        this.utils.presentToast('Adicionado caso', 2000, 'bottom', 'Ok');
-      },
-      (err) => {
-        console.log('____case submit err', JSON.stringify(err));
-        this.utils.presentToast('Erro ao adicionar caso', 2000, 'bottom', 'Ok');
-      }
-    );
+    this.caseSvc
+      .addCase(_case)
+      .then(
+        (success) => {
+          console.log('____case submit success', JSON.stringify(success));
+          this.utils.presentToast('Adicionado caso', 2000, 'bottom', 'Ok');
+        },
+        (err) => {
+          console.log('____case submit err', JSON.stringify(err));
+          this.utils.presentToast(
+            'Erro ao adicionar caso',
+            2000,
+            'bottom',
+            'Ok'
+          );
+        }
+      )
+      .finally(() => {
+        this.userSvc.fetchUser().subscribe((user) => {
+          console.log('afterUser', user);
+          this.store.dispatch(loadUser(user));
+          setStorage('user', user);
+        });
+      });
   }
 }

@@ -53,7 +53,7 @@ export class LoginPage implements OnInit {
     await removeStorage('user');
     await removeStorage('token');
     await removeStorage('hideVideo');
-    await removeStorage('showIntro');
+    await removeStorage('hideIntro');
     this.logoutFacebook();
     this.store.dispatch(new Logout());
     this.utils.presentToast('All clean for testing', 1000, 'bottom', 'Cool');

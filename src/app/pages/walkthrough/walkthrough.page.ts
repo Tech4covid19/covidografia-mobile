@@ -8,17 +8,19 @@ import { getStorage, setStorage } from 'src/app/services/storage.service';
   styleUrls: ['./walkthrough.page.scss'],
 })
 export class WalkthroughPage implements OnInit {
-  dontShowToggle: boolean = true;
+  dontShowToggle: boolean;
   constructor(private navCtrl: NavController) {}
 
   async ngOnInit() {
-    console.log('', await getStorage('showIntro'));
-    this.dontShowToggle = !(await getStorage('showIntro'));
+    setTimeout(() => {
+      this.dontShowToggle = true;
+      this.dontShowThisAgain();
+    }, 500);
   }
 
   async dontShowThisAgain() {
-    console.log('dont', !this.dontShowToggle);
-    return await setStorage('showIntro', !this.dontShowToggle);
+    console.log('dont', this.dontShowToggle);
+    return await setStorage('hideIntro', this.dontShowToggle);
   }
 
   pop() {

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Plugins, StatusBarStyle } from '@capacitor/core';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
+import { getStorage } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -46,17 +48,25 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private navCtrl: NavController
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+    this.platform.ready().then(async () => {
+      const { SplashScreen, StatusBar } = Plugins;
+      try {
+        await SplashScreen.hide();
+        await StatusBar.setStyle({ style: StatusBarStyle.Light });
+      } catch (err) {}
     });
   }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    getStorage('hideIntro').then((hideIntro) => {
+      if (!hideIntro) this.navCtrl.navigateForward('/walkthrough');
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
-import { IonRouterOutlet, ModalController } from '@ionic/angular';
+import { IonRouterOutlet, NavController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
     private utils: UtilsService,
     private routerOutlet: IonRouterOutlet,
     private store: Store<State>,
-    private modalController: ModalController
+    private navCtrl: NavController
   ) {}
 
   async ngOnInit() {
@@ -76,13 +76,17 @@ export class HomePage implements OnInit {
   }
 
   async setCurrentUser() {
-    //TODO: This must be protected by an Angular Guard
     const user = await getStorage('user');
-    this.store.dispatch(loadUser(user));
+    if (user) this.store.dispatch(loadUser(user));
 
     this.userSvc.fetchUser().subscribe((user) => {
       this.store.dispatch(loadUser(user));
       setStorage('user', user);
+      if (!user.latest_status || !user.latest_status.timestamp) {
+        this.navCtrl.navigateForward('/change-state-step1');
+      } else if (!user.postalcode) {
+        this.navCtrl.navigateForward('/post-code');
+      }
       this.fetchData(user);
     });
   }
@@ -168,11 +172,29 @@ export class HomePage implements OnInit {
 
   decideColor(buttonId: number, user: any): string {
     if (buttonId === 1) {
-      return user.latest_status?.confinement_state !== 1
-        ? '#eb445a'
-        : '#2dd36f';
+      switch (user.latest_status.status) {
+        case 1:
+          return 'blue';
+        case 4:
+          return 'orange';
+        case 300:
+          return 'red';
+      }
     } else {
-      return user.latest_status?.status == 2 ? '#eb445a' : '#2dd36f';
+      switch (user.latest_status.confinement_state) {
+        case 1:
+          return 'purple';
+        case 2:
+          return '#eb445a';
+        case 3:
+          return '#2dd36f';
+        case 100:
+          return '#fa6400';
+        case 200:
+          return '#3880ff';
+        default:
+          return '#3880ff';
+      }
     }
   }
 }
