@@ -168,9 +168,11 @@ export class HomePage implements OnInit {
 
   decideColor(buttonId: number, user: any): string {
     if (buttonId === 1) {
-      return user.latest_status.confinement_state !== 1 ? '#eb445a' : '#2dd36f';
+      return user.latest_status?.confinement_state !== 1
+        ? '#eb445a'
+        : '#2dd36f';
     } else {
-      return user.latest_status.status == 2 ? '#eb445a' : '#2dd36f';
+      return user.latest_status?.status == 2 ? '#eb445a' : '#2dd36f';
     }
   }
 }

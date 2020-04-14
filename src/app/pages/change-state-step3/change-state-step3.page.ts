@@ -68,8 +68,8 @@ export class ChangeStateStep3Page implements OnInit {
     });
   }
 
-  async goTo(page: string, user) {
-    await this.addCase(user);
+  goTo(page: string, user) {
+    this.addCase(user);
     this.navCtrl.navigateRoot(page);
   }
 
@@ -81,7 +81,7 @@ export class ChangeStateStep3Page implements OnInit {
     );
   }
 
-  async addCase(user) {
+  addCase(user: User) {
     const _case: ICase = {
       id: 0,
       postalCode: user.postalcode,

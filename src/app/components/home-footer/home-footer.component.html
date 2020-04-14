@@ -1,14 +1,20 @@
-<ion-grid style="font-size: 0.8em">
+<ion-grid style="font-size: 0.8em;">
   <ion-row class="ion-align-items-center">
     <ion-col size="12" class="ion-text-center">
-      <ion-text color="medium">
-        <ion-icon size="small" name="mail"></ion-icon> &nbsp;
-        info@covidografia.pt
+      <ion-text color="medium" style="text-decoration: none;">
+        <a
+          style="text-decoration: none; color: var(--ion-color-medium);"
+          href="mailto:info@covidografia.pt"
+          ><ion-icon size="small" name="mail"></ion-icon>
+          &nbsp;info@covidografia.pt</a
+        >
       </ion-text>
     </ion-col>
     <ion-col class="ion-text-center" size="12">
-      <ion-text color="medium">
+      <ion-text (click)="openTermsConditions()" color="medium">
         {{ 'TERMOS E CONDIÇÕES' | translate | titlecase }} |
+      </ion-text>
+      <ion-text (click)="openPrivacyPolicy()" color="medium">
         {{ 'POLÍTICA DE
         PRIVACIDADE' | translate | titlecase }}
       </ion-text>
@@ -18,7 +24,7 @@
         {{ 'ELIMINAR CONTA' | translate | titlecase }}
       </ion-text>
     </ion-col>
-    <ion-col class="ion-padding ion-text-center" size="12">
+    <ion-col (click)="logout()" class="ion-padding ion-text-center" size="12">
       <ion-text color="orange">
         {{ 'Log Out' | translate | titlecase }}
       </ion-text>

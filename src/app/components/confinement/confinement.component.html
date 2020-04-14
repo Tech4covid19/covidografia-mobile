@@ -14,12 +14,12 @@
       <ion-row class="emCasaCard">
         <ion-col class="ion-padding" size="6">
           <ion-text style="font-size: 2em;">
-            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
-            {{ c.confinement_state < 0 ? '' : c.confinement_state }}</ion-text
+            <ion-spinner *ngIf="c?.confinement_state < 0"></ion-spinner>
+            {{ c?.confinement_state < 0 ? '' : c?.confinement_state }}</ion-text
           >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            c.confinement_state_text | translate | titlecase
+            c?.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">
@@ -33,12 +33,12 @@
       <ion-row class="rotinaCard">
         <ion-col class="ion-padding" size="6">
           <ion-text style="font-size: 2em;">
-            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
-            {{ c.confinement_state < 0 ? '' : c.confinement_state }}</ion-text
+            <ion-spinner *ngIf="c?.confinement_state < 0"></ion-spinner>
+            {{ c?.confinement_state < 0 ? '' : c?.confinement_state }}</ion-text
           >
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            c.confinement_state_text | translate | titlecase
+            c?.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">
@@ -50,12 +50,12 @@
       <ion-row class="isoladosCard">
         <ion-col class="ion-padding" size="6">
           <ion-text style="font-size: 2em;">
-            <ion-spinner *ngIf="c.confinement_state < 0"></ion-spinner>
-            {{ c.confinement_state < 0 ? '' : c.confinement_state }}
+            <ion-spinner *ngIf="c?.confinement_state < 0"></ion-spinner>
+            {{ c?.confinement_state < 0 ? '' : c?.confinement_state }}
           </ion-text>
           <br />
           <ion-text style="font-size: 0.9rem; font-weight: bold;">{{
-            c.confinement_state_text | translate | titlecase
+            c?.confinement_state_text | translate | titlecase
           }}</ion-text>
         </ion-col>
         <ion-col class="ion-padding ion-text-end" size="6">

@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'Atualizar o meu estado',
-      url: '/status-update',
+      url: '/change-state-step1',
       icon: 'help-circle',
     },
     {

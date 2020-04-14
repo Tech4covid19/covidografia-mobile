@@ -39,3 +39,9 @@ For iOS
 ```sh
 $ npm run ios
 ```
+
+# Resources
+npm install -g cordova-res --unsafe-perm
+cordova-res --skip-config --copy 
+https://github.com/ionic-team/cordova-res#capacitor
+https://app.flycricket.com/app/743cd34b784d4c7a90f90c39952af8e0/screenshots

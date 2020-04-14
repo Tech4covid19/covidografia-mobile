@@ -2,16 +2,23 @@ import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { HTTP } from '@ionic-native/http/ngx';
 import { NavController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
 import { FacebookLoginResponse } from '@rdlabo/capacitor-facebook-login';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-import { setStorage } from './storage.service';
+import { Logout } from './../reducers/clearState.metareducer';
+import { State } from './../reducers/index';
+import { removeStorage, setStorage } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private nativeHttp: HTTP, private navCtrl: NavController) {}
+  constructor(
+    private nativeHttp: HTTP,
+    private navCtrl: NavController,
+    private store: Store<State>
+  ) {}
 
   getUserToken(token: string): Promise<any> {
     this.nativeHttp.setDataSerializer('json');
@@ -68,5 +75,10 @@ export class AuthService {
     const { FacebookLogin } = Plugins;
 
     await FacebookLogin.logout();
+
+    await removeStorage('user');
+    await removeStorage('token');
+    this.store.dispatch(new Logout());
+    this.navCtrl.navigateRoot('login');
   }
 }
